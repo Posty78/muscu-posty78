@@ -738,21 +738,41 @@ function parseLine(line){
 }
 
 /* ============ RECHERCHE NUTRITION (local puis Open Food Facts) ============ */
+async function offSearch(term){
+  const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(term)}&search_simple=1&action=process&json=1&page_size=20&sort_by=unique_scans_n&lc=fr&fields=product_name,product_name_fr,nutriments`;
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.products || [];
+  }catch(e){ return []; }
+}
+
 async function lookupNutrition(foodName){
   const generic = findGeneric(foodName);
   if (generic){
     return { name: foodName, per100: generic.data, source: "generic" };
   }
   try{
-    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(foodName)}&search_simple=1&action=process&json=1&page_size=20&sort_by=unique_scans_n&lc=fr&fields=product_name,product_name_fr,nutriments`;
-    const res = await fetch(url);
-    const data = await res.json();
-    const products = data.products || [];
-    if (!products.length) return null;
-
     const searchNorm = normalize(foodName);
     const searchCompact = searchNorm.replace(/[^a-z0-9]/g,"");
     const searchWords = searchNorm.split(/\s+/).filter(w => w.length > 2);
+
+    // Open Food Facts n'est pas tolérant aux fautes de frappe dans SA recherche,
+    // donc on multiplie les tentatives : phrase complète, puis chaque mot pris seul,
+    // pour maximiser les chances de faire remonter le bon produit avant de le
+    // comparer nous-mêmes avec notre propre tolérance aux fautes.
+    const queries = [foodName, ...searchWords];
+    const seen = new Map();
+    for (const q of queries){
+      const results = await offSearch(q);
+      for (const p of results){
+        const key = (p.product_name_fr || p.product_name || "") + "|" + (p.nutriments?.["energy-kcal_100g"]||"");
+        if (!seen.has(key)) seen.set(key, p);
+      }
+      if (seen.size >= 15) break; // assez de candidats, pas la peine de tout interroger
+    }
+    const products = [...seen.values()];
+    if (!products.length) return null;
 
     function wordFuzzyIncludes(pnameWords, word){
       if (pnameWords.some(pw => pw.includes(word) || word.includes(pw))) return true;
