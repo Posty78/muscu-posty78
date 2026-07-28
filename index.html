@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survivre au Régime Macdo — Posty78</title>
+<meta name="description" content="Suivi d'entraînement en direct pendant le Tour de France des 1500 McDo — Posty78">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0c0d0f;
+    --bg-elevated: #16181c;
+    --bg-card: #1c1f24;
+    --border: #2a2e35;
+    --text: #f2f3f5;
+    --text-dim: #9195a0;
+    --text-faint: #5a5e68;
+    --kick: #53fc18;
+    --kick-dim: #3ac710;
+    --macdo-red: #e4572e;
+    --macdo-gold: #f2b705;
+    --danger: #ff4d4d;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --display: 'Anton', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --body: 'Inter', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(83,252,24,0.08), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 0%, rgba(228,87,46,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    padding-bottom:80px;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+  input,select,textarea{font-family:inherit;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;
+    padding:14px 20px;
+    background:rgba(12,13,15,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-brand{
+    display:flex;align-items:center;gap:8px;
+    font-family:var(--display);
+    letter-spacing:0.5px;
+    font-size:18px;
+    color:var(--text);
+    text-decoration:none;
+    user-select:none;
+  }
+  .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--kick);box-shadow:0 0 8px var(--kick);}
+  .nav-pages{display:flex;gap:4px;overflow-x:auto;}
+  .nav-pages a{
+    font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;
+    padding:8px 14px;border-radius:999px;white-space:nowrap;
+    text-decoration:none;color:var(--text-dim);
+    border:1px solid transparent;
+  }
+  .nav-pages a.active{background:var(--kick);color:#08130a;}
+  .nav-pages a.disabled{color:var(--text-faint);cursor:default;}
+  .nav-pages a.disabled:hover{color:var(--text-faint);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:52px 20px 34px;
+    text-align:center;
+    border-bottom:1px solid var(--border);
+  }
+  .hero-eyebrow{
+    font-family:var(--mono);font-size:12px;font-weight:700;
+    color:var(--macdo-gold);text-transform:uppercase;letter-spacing:2px;
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-family:var(--display);
+    font-size:clamp(38px, 8vw, 74px);
+    line-height:0.95;
+    margin:0 0 6px;
+    letter-spacing:0.5px;
+    background:linear-gradient(180deg, #fff 0%, #d8dbe0 60%, var(--kick) 140%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    user-select:none;
+  }
+  .hero p{color:var(--text-dim);font-size:15px;max-width:520px;margin:10px auto 0;}
+  .hero-stats{
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+    margin-top:26px;
+  }
+  .stat-pill{
+    background:var(--bg-card);border:1px solid var(--border);
+    border-radius:999px;padding:9px 18px;
+    font-family:var(--mono);font-size:13px;color:var(--text-dim);
+    display:flex;align-items:center;gap:8px;
+  }
+  .stat-pill b{color:var(--text);font-size:15px;}
+
+  /* ---------- LAYOUT ---------- */
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px;}
+  .section{margin-top:40px;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .section-head h2{
+    font-family:var(--display);font-size:24px;letter-spacing:0.3px;margin:0;
+  }
+  .section-head .sub{color:var(--text-faint);font-size:13px;font-family:var(--mono);}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--kick);color:#08130a;border:none;
+    font-weight:800;font-size:14px;letter-spacing:0.2px;
+    padding:12px 20px;border-radius:999px;
+    transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow:0 0 0 rgba(83,252,24,0);
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(83,252,24,0.25);}
+  .btn:active{transform:translateY(0);}
+  .btn.secondary{background:var(--bg-card);color:var(--text);border:1px solid var(--border);}
+  .btn.secondary:hover{box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+  .btn.ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border);padding:9px 14px;font-size:12px;}
+  .btn.danger{background:var(--danger);color:#2a0505;}
+  .btn.small{padding:8px 14px;font-size:12px;}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  .admin-bar{
+    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;
+    padding:12px;border:1px dashed var(--kick-dim);border-radius:var(--radius-sm);
+    background:rgba(83,252,24,0.05);
+  }
+  .admin-tag{
+    font-family:var(--mono);font-size:11px;color:var(--kick);
+    display:flex;align-items:center;gap:6px;font-weight:700;
+  }
+
+  /* ---------- CALENDAR ---------- */
+  .calendar{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;
+  }
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .cal-head .month{font-family:var(--display);font-size:18px;letter-spacing:0.5px;}
+  .cal-nav{display:flex;gap:6px;}
+  .cal-nav button{
+    width:30px;height:30px;border-radius:8px;background:var(--bg-elevated);
+    border:1px solid var(--border);color:var(--text);font-size:14px;
+  }
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+  .cal-dow{text-align:center;font-size:10px;color:var(--text-faint);font-family:var(--mono);padding-bottom:4px;text-transform:uppercase;}
+  .cal-day{
+    aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-size:12px;color:var(--text-dim);background:var(--bg-elevated);
+    cursor:default;position:relative;border:1px solid transparent;
+  }
+  .cal-day.empty{background:transparent;}
+  .cal-day.has-session{background:rgba(83,252,24,0.12);color:var(--text);cursor:pointer;border-color:rgba(83,252,24,0.25);}
+  .cal-day.has-session:hover{border-color:var(--kick);}
+  .cal-day.has-rest{background:rgba(242,183,5,0.1);border-color:rgba(242,183,5,0.25);}
+  .cal-day.selected{outline:2px solid var(--kick);}
+  .cal-day .dot-row{display:flex;gap:2px;margin-top:2px;}
+  .cal-day .mini-dot{width:4px;height:4px;border-radius:50%;background:var(--kick);}
+  .cal-day.has-rest .mini-dot{background:var(--macdo-gold);}
+
+  /* ---------- FILTER ---------- */
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center;}
+  select, .input{
+    background:var(--bg-card);border:1px solid var(--border);color:var(--text);
+    border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;
+  }
+  select:focus,.input:focus{outline:none;border-color:var(--kick-dim);}
+
+  /* ---------- SESSION CARDS ---------- */
+  .session-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:20px;margin-bottom:14px;
+  }
+  .session-card.rest{border-style:dashed;opacity:0.85;}
+  .session-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .session-date{font-family:var(--display);font-size:20px;letter-spacing:0.3px;}
+  .session-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--text-dim);font-size:12px;font-family:var(--mono);margin-top:4px;}
+  .session-meta span{display:flex;align-items:center;gap:4px;}
+  .feeling-badge{font-size:20px;}
+  .session-actions{display:flex;gap:6px;}
+  .icon-btn{
+    width:30px;height:30px;border-radius:8px;background:var(--bg-elevated);
+    border:1px solid var(--border);color:var(--text-dim);font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:hover{color:var(--text);border-color:var(--text-faint);}
+  .icon-btn.danger-hover:hover{color:var(--danger);border-color:var(--danger);}
+
+  .exo-table{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
+  .exo-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);gap:10px;flex-wrap:wrap;}
+  .exo-row:last-child{border-bottom:none;}
+  .exo-name{font-weight:700;display:flex;align-items:center;gap:8px;}
+  .exo-group-tag{
+    font-size:9px;font-family:var(--mono);color:var(--text-faint);
+    border:1px solid var(--border);border-radius:5px;padding:2px 6px;text-transform:uppercase;
+  }
+  .exo-detail{color:var(--text-dim);font-family:var(--mono);font-size:12px;text-align:right;}
+  .exo-series{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;}
+  .serie-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-size:11px;}
+
+  .session-note{margin-top:12px;font-size:13px;color:var(--text-dim);font-style:italic;padding:10px 12px;background:var(--bg-elevated);border-radius:var(--radius-sm);}
+  .session-volume{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--kick);display:flex;align-items:center;gap:6px;}
+
+  .reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .react-btn{
+    background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;
+    padding:5px 10px;font-size:14px;display:flex;align-items:center;gap:5px;
+    color:var(--text-dim);transition:transform .1s ease;
+  }
+  .react-btn .count{font-family:var(--mono);font-size:11px;}
+  .react-btn:hover{border-color:var(--kick-dim);transform:translateY(-1px);}
+  .react-btn.reacted{border-color:var(--kick);background:rgba(83,252,24,0.1);color:var(--text);}
+
+  .empty-state{
+    text-align:center;padding:40px 20px;color:var(--text-faint);
+    border:1px dashed var(--border);border-radius:var(--radius);font-size:13px;
+  }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(6,7,8,0.75);backdrop-filter:blur(4px);
+    display:none;align-items:flex-start;justify-content:center;z-index:100;
+    padding:20px;overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);
+    width:100%;max-width:640px;padding:26px;margin:30px 0 60px;
+  }
+  .modal h3{font-family:var(--display);font-size:24px;margin:0 0 4px;letter-spacing:0.3px;}
+  .modal .modal-sub{color:var(--text-faint);font-size:12px;font-family:var(--mono);margin-bottom:20px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+  .field .input, .field select{width:100%;}
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+
+  .chrono-box{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:14px 16px;margin-bottom:20px;
+  }
+  .chrono-time{font-family:var(--mono);font-size:26px;font-weight:700;}
+  .chrono-actions{display:flex;gap:8px;}
+
+  .exo-form-card{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:16px;margin-bottom:12px;cursor:grab;
+  }
+  .exo-form-card.dragging{opacity:0.4;}
+  .exo-form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;}
+  .exo-form-head .drag-handle{color:var(--text-faint);font-size:14px;margin-right:6px;}
+  .exo-form-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px;}
+  .exo-form-actions{display:flex;gap:6px;}
+  .bw-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);}
+  .series-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center;}
+  .serie-input{
+    width:52px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);
+    border-radius:7px;padding:6px 4px;text-align:center;font-family:var(--mono);font-size:13px;
+  }
+  .serie-remove{
+    width:20px;height:20px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);
+    color:var(--text-faint);font-size:11px;display:flex;align-items:center;justify-content:center;
+  }
+  .add-serie-btn{
+    background:transparent;border:1px dashed var(--text-faint);color:var(--text-dim);
+    border-radius:7px;padding:6px 10px;font-size:12px;
+  }
+
+  .feeling-picker{display:flex;gap:8px;flex-wrap:wrap;}
+  .feeling-opt{
+    font-size:22px;padding:8px 12px;border-radius:10px;background:var(--bg-card);
+    border:1px solid var(--border);
+  }
+  .feeling-opt.selected{border-color:var(--kick);background:rgba(83,252,24,0.12);}
+
+  .modal-footer{display:flex;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap;}
+
+  /* ---------- ADMIN LOGIN ---------- */
+  .login-box{
+    max-width:320px;width:100%;
+  }
+  .login-box .field{margin-bottom:12px;}
+  .login-error{color:var(--danger);font-size:12px;margin-top:8px;display:none;}
+
+  /* ---------- TEMPLATE MANAGER ---------- */
+  .template-panel{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;margin-top:16px;
+  }
+  .template-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:10px 12px;background:var(--bg-elevated);border-radius:8px;margin-bottom:6px;
+    border:1px solid var(--border);
+  }
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--bg-elevated);border:1px solid var(--kick-dim);color:var(--text);
+    padding:12px 20px;border-radius:999px;font-size:13px;z-index:200;
+    display:none;box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  }
+
+  footer{text-align:center;margin-top:60px;color:var(--text-faint);font-size:12px;font-family:var(--mono);}
+
+  @media (max-width:600px){
+    .nav{flex-direction:column;align-items:stretch;gap:10px;}
+    .nav-pages{justify-content:center;}
+    .field-row{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="#" id="titleTap"><span class="dot"></span>POSTY78 · MUSCU</a>
+  <div class="nav-pages">
+    <a href="#" class="active">Séances</a>
+    <a href="#" class="disabled" title="Bientôt disponible">Poids & Mensurations</a>
+    <a href="#" class="disabled" title="Bientôt disponible">Alimentation & Compléments</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-eyebrow">🍔 Tour de France des 1500 McDo · Jour <span id="dayCounter">—</span>/365</div>
+  <h1>SURVIVRE AU<br>RÉGIME MACDO</h1>
+  <p>Suivi public de mes séances pendant le tour. Tout ce que vous voyez ici est mis à jour en direct par moi, sur la route.</p>
+  <div class="hero-stats">
+    <div class="stat-pill">💪 <b id="statTotalSessions">0</b> séances loguées</div>
+    <div class="stat-pill">🔥 <b id="statStreak">0</b> jours de suite</div>
+    <div class="stat-pill">📦 <b id="statVolume">0</b> kg soulevés au total</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div id="adminBar" class="admin-bar" style="display:none;">
+    <span class="admin-tag">🔓 MODE ADMIN ACTIF</span>
+    <button class="btn small" id="btnNewSession">+ Nouvelle séance</button>
+    <button class="btn secondary small" id="btnRestDay">😴 Jour de repos</button>
+    <button class="btn secondary small" id="btnManageTemplate">⚙️ Gérer les exercices</button>
+    <button class="btn ghost small" id="btnLogout" style="margin-left:auto;">Déconnexion</button>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>📅 Historique</h2>
+      <span class="sub" id="calRange">—</span>
+    </div>
+    <div class="calendar">
+      <div class="cal-head">
+        <div class="cal-nav"><button id="calPrev">‹</button></div>
+        <div class="month" id="calMonthLabel">—</div>
+        <div class="cal-nav"><button id="calNext">›</button></div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="filter-row">
+      <select id="exoFilter">
+        <option value="">Tous les exercices</option>
+      </select>
+      <select id="dateSort">
+        <option value="desc">Plus récent d'abord</option>
+        <option value="asc">Plus ancien d'abord</option>
+      </select>
+      <button class="btn ghost small" id="clearFilters">Réinitialiser</button>
+    </div>
+
+    <div id="sessionsList"></div>
+  </section>
+
+  <footer>
+    kick.com/posty78 · muscu.posty78.fr — Posty78
+  </footer>
+</div>
+
+<!-- ================= MODAL: NOUVELLE / EDIT SEANCE ================= -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal">
+    <h3 id="modalTitle">Nouvelle séance</h3>
+    <div class="modal-sub" id="modalSub">—</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Date</label>
+        <input type="date" class="input" id="fDate">
+      </div>
+      <div class="field">
+        <label>Lieu / ville</label>
+        <input type="text" class="input" id="fPlace" placeholder="Ex: Lille">
+      </div>
+    </div>
+
+    <div class="chrono-box">
+      <div>
+        <div style="font-size:11px;color:var(--text-faint);font-family:var(--mono);text-transform:uppercase;">Durée de la séance</div>
+        <div class="chrono-time" id="chronoDisplay">00:00:00</div>
+      </div>
+      <div class="chrono-actions">
+        <button class="btn secondary small" id="chronoStart">▶ Démarrer</button>
+        <button class="btn ghost small" id="chronoStop" style="display:none;">⏸ Stop</button>
+        <button class="btn ghost small" id="chronoReset">↺</button>
+      </div>
+    </div>
+
+    <div id="exoFormList"></div>
+    <button class="btn secondary small" id="btnAddExoInline" style="margin-top:6px;">+ Ajouter un exercice à cette séance</button>
+
+    <div class="field" style="margin-top:20px;">
+      <label>Ressenti</label>
+      <div class="feeling-picker" id="feelingPicker"></div>
+    </div>
+
+    <div class="field">
+      <label>Note (optionnel)</label>
+      <textarea class="input" id="fNote" rows="3" placeholder="Comment tu t'es senti, contexte de la journée..." style="width:100%;resize:vertical;"></textarea>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn ghost" id="btnCancelSession">Annuler</button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn danger" id="btnDeleteSession" style="display:none;">Supprimer cette séance</button>
+        <button class="btn" id="btnSaveSession">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: ADMIN LOGIN ================= -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal login-box">
+    <h3>Accès admin</h3>
+    <div class="modal-sub">Réservé à Posty78</div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" class="input" id="loginEmail" autocomplete="username">
+    </div>
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" class="input" id="loginPassword" autocomplete="current-password">
+    </div>
+    <div class="login-error" id="loginError">Identifiants incorrects.</div>
+    <div class="modal-footer">
+      <button class="btn ghost" id="btnCancelLogin">Annuler</button>
+      <button class="btn" id="btnDoLogin">Se connecter</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL: GESTION TEMPLATE ================= -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal">
+    <h3>Gérer les exercices</h3>
+    <div class="modal-sub">Ce template sert de base à chaque "Nouvelle séance". Glisse-dépose pour réordonner.</div>
+    <div id="templateList"></div>
+
+    <div class="field-row" style="margin-top:16px;">
+      <div class="field" style="flex:2;">
+        <label>Nouvel exercice</label>
+        <input type="text" class="input" id="newExoName" placeholder="Ex: Développé militaire">
+      </div>
+      <div class="field" style="flex:1;">
+        <label>Groupe</label>
+        <select id="newExoGroup">
+          <option>Pecs</option>
+          <option>Dos</option>
+          <option>Jambes</option>
+          <option>Épaules</option>
+          <option>Bras</option>
+          <option>Abdos</option>
+          <option>Cardio</option>
+        </select>
+      </div>
+    </div>
+    <label class="bw-check" style="margin-bottom:14px;">
+      <input type="checkbox" id="newExoBw"> Poids du corps (pas de charge)
+    </label>
+    <button class="btn secondary small" id="btnAddTemplateExo">+ Ajouter au template</button>
+
+    <div class="modal-footer">
+      <button class="btn" id="btnCloseTemplate">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+/* ======================================================================
+   FIREBASE CONFIG — À REMPLACER avec la config de ton projet existant
+   (même projet que maps/giveaway/barbecue). Console Firebase > Paramètres
+   du projet > Vos applications > SDK setup and configuration.
+   ====================================================================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy, increment, serverTimestamp, setDoc
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "REMPLACE_MOI",
+  authDomain: "REMPLACE_MOI.firebaseapp.com",
+  projectId: "REMPLACE_MOI",
+  storageBucket: "REMPLACE_MOI.appspot.com",
+  messagingSenderId: "REMPLACE_MOI",
+  appId: "REMPLACE_MOI"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const SESSIONS_COL = "muscu_sessions";
+const TEMPLATE_COL = "muscu_template";
+const START_DATE = "2026-09-01"; // Jour 1 du tour
+
+/* ---------------- STATE ---------------- */
+let sessions = [];       // toutes les séances (triées desc par date)
+let template = [];       // exercices du template, triés par 'order'
+let isAdmin = false;
+let editingSessionId = null;
+let chronoInterval = null;
+let chronoSeconds = 0;
+let chronoRunning = false;
+let calViewDate = new Date();
+let selectedCalDay = null;
+
+const FEELINGS = ["😫","😓","😐","💪","🔥"];
+const REACTIONS = ["💪","🔥","😤","👏","🚀","🥵","💀","🦍","👊","🥇"];
+
+/* ---------------- HELPERS ---------------- */
+const $ = (id) => document.getElementById(id);
+const fmtDate = (iso) => {
+  const d = new Date(iso + "T12:00:00");
+  return d.toLocaleDateString("fr-FR", { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+};
+const todayISO = () => new Date().toISOString().slice(0,10);
+const uid = () => Math.random().toString(36).slice(2,10);
+
+function showToast(msg){
+  const t = $("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=> t.style.display="none", 2600);
+}
+
+function localReactionKey(sessionId, emoji){ return `muscu_react_${sessionId}_${emoji}`; }
+
+/* ---------------- DAY COUNTER ---------------- */
+function updateDayCounter(){
+  const start = new Date(START_DATE + "T00:00:00");
+  const now = new Date();
+  const diff = Math.floor((now - start) / 86400000) + 1;
+  $("dayCounter").textContent = diff > 0 && diff <= 365 ? diff : (diff <= 0 ? "0 (pas encore lancé)" : "365");
+}
+updateDayCounter();
+
+/* ======================================================================
+   AUTH
+   ====================================================================== */
+onAuthStateChanged(auth, (user) => {
+  isAdmin = !!user;
+  $("adminBar").style.display = isAdmin ? "flex" : "none";
+  renderSessions();
+});
+
+$("titleTap").addEventListener("click", (e)=>{
+  e.preventDefault();
+  $("titleTap")._taps = ($("titleTap")._taps || 0) + 1;
+  clearTimeout($("titleTap")._tapTimer);
+  $("titleTap")._tapTimer = setTimeout(()=> $("titleTap")._taps = 0, 1500);
+  if ($("titleTap")._taps >= 5){
+    $("titleTap")._taps = 0;
+    if (isAdmin){
+      showToast("Déjà connecté en admin.");
+    } else {
+      $("loginModal").classList.add("open");
+    }
+  }
+});
+
+$("btnCancelLogin").addEventListener("click", ()=> $("loginModal").classList.remove("open"));
+$("btnDoLogin").addEventListener("click", async ()=>{
+  const email = $("loginEmail").value.trim();
+  const pass = $("loginPassword").value;
+  $("loginError").style.display = "none";
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+    $("loginModal").classList.remove("open");
+    $("loginEmail").value=""; $("loginPassword").value="";
+    showToast("Connecté en admin ✅");
+  }catch(err){
+    $("loginError").textContent = "Identifiants incorrects.";
+    $("loginError").style.display = "block";
+  }
+});
+$("btnLogout").addEventListener("click", async ()=>{
+  await signOut(auth);
+  showToast("Déconnecté.");
+});
+
+/* ======================================================================
+   LOAD DATA (realtime)
+   ====================================================================== */
+function listenSessions(){
+  const q = query(collection(db, SESSIONS_COL), orderBy("date", "desc"));
+  onSnapshot(q, (snap)=>{
+    sessions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    populateExoFilter();
+    renderStats();
+    renderCalendar();
+    renderSessions();
+  });
+}
+function listenTemplate(){
+  const q = query(collection(db, TEMPLATE_COL), orderBy("order", "asc"));
+  onSnapshot(q, (snap)=>{
+    template = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTemplateList();
+  });
+}
+
+/* ======================================================================
+   STATS
+   ====================================================================== */
+function renderStats(){
+  const real = sessions.filter(s => !s.isRestDay);
+  $("statTotalSessions").textContent = real.length;
+  let totalVol = 0;
+  real.forEach(s => totalVol += (s.volumeTotal || 0));
+  $("statVolume").textContent = Math.round(totalVol).toLocaleString("fr-FR");
+
+  // streak: jours consécutifs avec une séance (repos = casse pas la chaîne)
+  let streak = 0;
+  let cursor = new Date();
+  const dateSet = new Set(sessions.map(s => s.date));
+  for (let i=0; i<365; i++){
+    const iso = cursor.toISOString().slice(0,10);
+    if (dateSet.has(iso)) { streak++; cursor.setDate(cursor.getDate()-1); }
+    else if (iso === todayISO()) { cursor.setDate(cursor.getDate()-1); continue; }
+    else break;
+  }
+  $("statStreak").textContent = streak;
+}
+
+/* ======================================================================
+   EXERCISE FILTER
+   ====================================================================== */
+function populateExoFilter(){
+  const names = new Set();
+  sessions.forEach(s => (s.exercises||[]).forEach(e => names.add(e.name)));
+  const sel = $("exoFilter");
+  const current = sel.value;
+  sel.innerHTML = `<option value="">Tous les exercices</option>` +
+    [...names].sort().map(n => `<option value="${n}">${n}</option>`).join("");
+  sel.value = current;
+}
+$("exoFilter").addEventListener("change", renderSessions);
+$("dateSort").addEventListener("change", renderSessions);
+$("clearFilters").addEventListener("click", ()=>{
+  $("exoFilter").value = ""; $("dateSort").value = "desc"; selectedCalDay = null;
+  renderCalendar(); renderSessions();
+});
+
+/* ======================================================================
+   CALENDAR
+   ====================================================================== */
+function renderCalendar(){
+  const y = calViewDate.getFullYear(), m = calViewDate.getMonth();
+  $("calMonthLabel").textContent = calViewDate.toLocaleDateString("fr-FR", { month:'long', year:'numeric' });
+  const first = new Date(y, m, 1);
+  const startOffset = (first.getDay() + 6) % 7; // lundi=0
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+
+  const byDate = {};
+  sessions.forEach(s => { (byDate[s.date] ||= []).push(s); });
+
+  let html = "";
+  ["L","M","M","J","V","S","D"].forEach(d => html += `<div class="cal-dow">${d}</div>`);
+  for (let i=0;i<startOffset;i++) html += `<div class="cal-day empty"></div>`;
+  for (let day=1; day<=daysInMonth; day++){
+    const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const entries = byDate[iso] || [];
+    const hasReal = entries.some(e=>!e.isRestDay);
+    const hasRest = entries.some(e=>e.isRestDay);
+    let cls = "cal-day";
+    if (hasReal) cls += " has-session";
+    else if (hasRest) cls += " has-rest";
+    if (selectedCalDay === iso) cls += " selected";
+    html += `<div class="${cls}" data-date="${iso}">${day}${entries.length ? `<div class="dot-row"><div class="mini-dot"></div></div>`:''}</div>`;
+  }
+  $("calGrid").innerHTML = html;
+  $("calGrid").querySelectorAll(".cal-day.has-session, .cal-day.has-rest").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const d = el.dataset.date;
+      selectedCalDay = (selectedCalDay === d) ? null : d;
+      renderCalendar();
+      renderSessions();
+    });
+  });
+}
+$("calPrev").addEventListener("click", ()=>{ calViewDate.setMonth(calViewDate.getMonth()-1); renderCalendar(); });
+$("calNext").addEventListener("click", ()=>{ calViewDate.setMonth(calViewDate.getMonth()+1); renderCalendar(); });
+
+/* ======================================================================
+   SESSIONS LIST
+   ====================================================================== */
+function renderSessions(){
+  let list = [...sessions];
+  const exoFilter = $("exoFilter").value;
+  const sortDir = $("dateSort").value;
+
+  if (selectedCalDay) list = list.filter(s => s.date === selectedCalDay);
+  if (exoFilter) list = list.filter(s => (s.exercises||[]).some(e => e.name === exoFilter));
+  list.sort((a,b)=> sortDir === "asc" ? a.date.localeCompare(b.date) : b.date.localeCompare(a.date));
+
+  if (!list.length){
+    $("sessionsList").innerHTML = `<div class="empty-state">Aucune séance à afficher pour l'instant.</div>`;
+    return;
+  }
+
+  $("sessionsList").innerHTML = list.map(s => renderSessionCard(s)).join("");
+
+  // bind actions
+  list.forEach(s => {
+    const card = document.querySelector(`[data-session-id="${s.id}"]`);
+    if (!card) return;
+    card.querySelectorAll(".react-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=> handleReact(s.id, btn.dataset.emoji));
+    });
+    const editBtn = card.querySelector(".edit-btn");
+    if (editBtn) editBtn.addEventListener("click", ()=> openSessionModal(s));
+    const delBtn = card.querySelector(".delete-btn");
+    if (delBtn) delBtn.addEventListener("click", ()=> confirmDeleteSession(s.id, s.date));
+  });
+}
+
+function renderSessionCard(s){
+  const reactions = s.reactions || {};
+  const reactHtml = REACTIONS.map(e=>{
+    const count = reactions[e] || 0;
+    const reacted = localStorage.getItem(localReactionKey(s.id, e)) === "1";
+    return `<button class="react-btn ${reacted?'reacted':''}" data-emoji="${e}">${e}<span class="count">${count>0?count:''}</span></button>`;
+  }).join("");
+
+  if (s.isRestDay){
+    return `
+    <div class="session-card rest" data-session-id="${s.id}">
+      <div class="session-top">
+        <div>
+          <div class="session-date">😴 Jour de repos</div>
+          <div class="session-meta"><span>📅 ${fmtDate(s.date)}</span>${s.place?`<span>📍 ${s.place}</span>`:''}</div>
+        </div>
+        ${isAdmin ? `<div class="session-actions">
+          <button class="icon-btn edit-btn" title="Modifier">✎</button>
+          <button class="icon-btn danger-hover delete-btn" title="Supprimer">🗑</button>
+        </div>` : ''}
+      </div>
+      ${s.note ? `<div class="session-note">"${escapeHtml(s.note)}"</div>` : ''}
+      <div class="reactions">${reactHtml}</div>
+    </div>`;
+  }
+
+  const exoRows = (s.exercises||[]).map(e => `
+    <div class="exo-row">
+      <div class="exo-name">${escapeHtml(e.name)} <span class="exo-group-tag">${e.group||''}</span></div>
+      <div class="exo-detail">
+        ${e.bodyweight ? '<span>poids du corps</span>' : `<span>${e.weight}kg</span>`}
+        <div class="exo-series">${(e.series||[]).map(r=>`<span class="serie-chip">${r}</span>`).join('')}</div>
+      </div>
+    </div>
+  `).join("");
+
+  const durMin = s.durationSeconds ? Math.round(s.durationSeconds/60) : null;
+
+  return `
+  <div class="session-card" data-session-id="${s.id}">
+    <div class="session-top">
+      <div>
+        <div class="session-date">📅 ${fmtDate(s.date)}</div>
+        <div class="session-meta">
+          ${s.place ? `<span>📍 ${s.place}</span>` : ''}
+          ${durMin ? `<span>⏱ ${durMin} min</span>` : ''}
+          ${s.feeling ? `<span class="feeling-badge">${s.feeling}</span>` : ''}
+        </div>
+      </div>
+      ${isAdmin ? `<div class="session-actions">
+        <button class="icon-btn edit-btn" title="Modifier">✎</button>
+        <button class="icon-btn danger-hover delete-btn" title="Supprimer">🗑</button>
+      </div>` : ''}
+    </div>
+    <div class="exo-table">${exoRows}</div>
+    ${s.volumeTotal ? `<div class="session-volume">📦 Volume total : ${Math.round(s.volumeTotal).toLocaleString('fr-FR')} kg déplacés</div>` : ''}
+    ${s.note ? `<div class="session-note">"${escapeHtml(s.note)}"</div>` : ''}
+    <div class="reactions">${reactHtml}</div>
+  </div>`;
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+async function handleReact(sessionId, emoji){
+  const key = localReactionKey(sessionId, emoji);
+  const already = localStorage.getItem(key) === "1";
+  const ref = doc(db, SESSIONS_COL, sessionId);
+  const field = `reactions.${emoji}`;
+  try{
+    await updateDoc(ref, { [field]: increment(already ? -1 : 1) });
+    if (already) localStorage.removeItem(key); else localStorage.setItem(key, "1");
+  }catch(e){ console.error(e); }
+}
+
+async function confirmDeleteSession(id, date){
+  if (!confirm(`Supprimer définitivement la séance du ${fmtDate(date)} ? Cette action est irréversible.`)) return;
+  await deleteDoc(doc(db, SESSIONS_COL, id));
+  showToast("Séance supprimée.");
+}
+
+/* ======================================================================
+   TEMPLATE MANAGER
+   ====================================================================== */
+$("btnManageTemplate").addEventListener("click", ()=> $("templateModal").classList.add("open"));
+$("btnCloseTemplate").addEventListener("click", ()=> $("templateModal").classList.remove("open"));
+
+function renderTemplateList(){
+  $("templateList").innerHTML = template.map(t => `
+    <div class="template-item" draggable="true" data-id="${t.id}">
+      <div><b>${escapeHtml(t.name)}</b> <span class="exo-group-tag">${t.group}</span> ${t.bodyweight?'<span class="exo-group-tag">poids du corps</span>':''}</div>
+      <button class="icon-btn danger-hover" data-remove="${t.id}" title="Supprimer définitivement">🗑</button>
+    </div>
+  `).join("") || `<div class="empty-state">Aucun exercice dans le template.</div>`;
+
+  $("templateList").querySelectorAll("[data-remove]").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      if (!confirm("Supprimer définitivement cet exercice du template ? Il restera visible dans l'historique existant.")) return;
+      await deleteDoc(doc(db, TEMPLATE_COL, btn.dataset.remove));
+    });
+  });
+
+  enableDragReorder($("templateList"), async (orderedIds)=>{
+    for (let i=0;i<orderedIds.length;i++){
+      await updateDoc(doc(db, TEMPLATE_COL, orderedIds[i]), { order: i });
+    }
+  });
+}
+
+$("btnAddTemplateExo").addEventListener("click", async ()=>{
+  const name = $("newExoName").value.trim();
+  if (!name) return showToast("Donne un nom à l'exercice.");
+  const group = $("newExoGroup").value;
+  const bodyweight = $("newExoBw").checked;
+  await addDoc(collection(db, TEMPLATE_COL), { name, group, bodyweight, order: template.length, createdAt: serverTimestamp() });
+  $("newExoName").value = ""; $("newExoBw").checked = false;
+  showToast("Exercice ajouté au template ✅");
+});
+
+function enableDragReorder(container, onReorder){
+  let dragEl = null;
+  container.querySelectorAll("[draggable=true]").forEach(el=>{
+    el.addEventListener("dragstart", ()=>{ dragEl = el; el.classList.add("dragging"); });
+    el.addEventListener("dragend", ()=>{ el.classList.remove("dragging"); onReorder([...container.children].map(c=>c.dataset.id).filter(Boolean)); });
+    el.addEventListener("dragover", (e)=>{
+      e.preventDefault();
+      const after = getDragAfterElement(container, e.clientY);
+      if (!dragEl) return;
+      if (after == null) container.appendChild(dragEl);
+      else container.insertBefore(dragEl, after);
+    });
+  });
+}
+function getDragAfterElement(container, y){
+  const els = [...container.querySelectorAll('[draggable=true]:not(.dragging)')];
+  return els.reduce((closest, child)=>{
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height/2;
+    if (offset < 0 && offset > closest.offset) return { offset, element: child };
+    return closest;
+  }, { offset: -Infinity }).element;
+}
+
+/* ======================================================================
+   NEW / EDIT SESSION MODAL
+   ====================================================================== */
+let modalExercises = []; // [{tempId, name, group, bodyweight, weight, series:[..]}]
+
+$("btnNewSession").addEventListener("click", ()=> openSessionModal(null));
+$("btnCancelSession").addEventListener("click", closeSessionModal);
+function closeSessionModal(){
+  $("sessionModal").classList.remove("open");
+  stopChrono();
+}
+
+async function openSessionModal(existing){
+  editingSessionId = existing ? existing.id : null;
+  $("modalTitle").textContent = existing ? "Modifier la séance" : "Nouvelle séance";
+  $("modalSub").textContent = existing ? existing.date : "Se remplit avec le template + tes dernières valeurs";
+  $("fDate").value = existing ? existing.date : todayISO();
+  $("fPlace").value = existing ? (existing.place || "") : "";
+  $("fNote").value = existing ? (existing.note || "") : "";
+  chronoSeconds = existing ? (existing.durationSeconds || 0) : 0;
+  updateChronoDisplay();
+  $("btnDeleteSession").style.display = existing ? "inline-flex" : "none";
+
+  renderFeelingPicker(existing ? existing.feeling : null);
+
+  if (existing){
+    modalExercises = (existing.exercises||[]).map(e => ({ tempId: uid(), ...e, series:[...(e.series||[])] }));
+  } else {
+    // pré-remplir depuis le template + dernières valeurs connues
+    modalExercises = await Promise.all(template.map(async t => {
+      const last = findLastValuesForExercise(t.name);
+      return {
+        tempId: uid(),
+        name: t.name,
+        group: t.group,
+        bodyweight: t.bodyweight,
+        weight: last ? last.weight : 0,
+        series: last ? [...last.series] : [10]
+      };
+    }));
+  }
+  renderExoFormList();
+  $("sessionModal").classList.add("open");
+}
+
+function findLastValuesForExercise(name){
+  for (const s of sessions){ // sessions déjà triées desc
+    const found = (s.exercises||[]).find(e => e.name === name);
+    if (found) return found;
+  }
+  return null;
+}
+
+function renderFeelingPicker(selected){
+  $("feelingPicker").innerHTML = FEELINGS.map(f => `<div class="feeling-opt ${f===selected?'selected':''}" data-f="${f}">${f}</div>`).join("");
+  $("feelingPicker").querySelectorAll(".feeling-opt").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      $("feelingPicker").querySelectorAll(".feeling-opt").forEach(x=>x.classList.remove("selected"));
+      el.classList.add("selected");
+    });
+  });
+}
+
+function renderExoFormList(){
+  $("exoFormList").innerHTML = modalExercises.map(e => `
+    <div class="exo-form-card" draggable="true" data-tempid="${e.tempId}">
+      <div class="exo-form-head">
+        <div class="exo-form-title"><span class="drag-handle">⠿</span>${escapeHtml(e.name)} <span class="exo-group-tag">${e.group}</span></div>
+        <div class="exo-form-actions">
+          <button class="btn ghost small" data-remove-today="${e.tempId}">Retirer aujourd'hui</button>
+        </div>
+      </div>
+      <label class="bw-check">
+        <input type="checkbox" data-bw="${e.tempId}" ${e.bodyweight?'checked':''}> Poids du corps
+      </label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;">
+        <div style="${e.bodyweight?'display:none':''}" data-weight-wrap="${e.tempId}">
+          <input type="number" step="0.5" class="serie-input" style="width:70px;" data-weight="${e.tempId}" value="${e.weight||0}"> kg
+        </div>
+        <div class="series-list" data-series="${e.tempId}">
+          ${(e.series||[]).map((r,i)=>`<input type="number" class="serie-input" data-serie-idx="${i}" data-serie-for="${e.tempId}" value="${r}"><button class="serie-remove" data-serie-remove="${e.tempId}" data-idx="${i}">×</button>`).join("")}
+          <button class="add-serie-btn" data-add-serie="${e.tempId}">+ série</button>
+        </div>
+      </div>
+    </div>
+  `).join("") || `<div class="empty-state">Aucun exercice. Ajoute-en un ci-dessous.</div>`;
+
+  bindExoFormEvents();
+  enableDragReorder($("exoFormList"), (orderedTempIds)=>{
+    modalExercises.sort((a,b)=> orderedTempIds.indexOf(a.tempId) - orderedTempIds.indexOf(b.tempId));
+  });
+}
+
+function bindExoFormEvents(){
+  $("exoFormList").querySelectorAll("[data-remove-today]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      modalExercises = modalExercises.filter(e => e.tempId !== btn.dataset.removeToday);
+      renderExoFormList();
+    });
+  });
+  $("exoFormList").querySelectorAll("[data-bw]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      const e = modalExercises.find(x=>x.tempId===cb.dataset.bw);
+      e.bodyweight = cb.checked;
+      document.querySelector(`[data-weight-wrap="${e.tempId}"]`).style.display = cb.checked ? 'none' : '';
+    });
+  });
+  $("exoFormList").querySelectorAll("[data-weight]").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const e = modalExercises.find(x=>x.tempId===inp.dataset.weight);
+      e.weight = parseFloat(inp.value) || 0;
+    });
+  });
+  $("exoFormList").querySelectorAll("[data-serie-for]").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const e = modalExercises.find(x=>x.tempId===inp.dataset.serieFor);
+      e.series[parseInt(inp.dataset.serieIdx)] = parseInt(inp.value) || 0;
+    });
+  });
+  $("exoFormList").querySelectorAll("[data-serie-remove]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const e = modalExercises.find(x=>x.tempId===btn.dataset.serieRemove);
+      e.series.splice(parseInt(btn.dataset.idx),1);
+      renderExoFormList();
+    });
+  });
+  $("exoFormList").querySelectorAll("[data-add-serie]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const e = modalExercises.find(x=>x.tempId===btn.dataset.addSerie);
+      e.series.push(10);
+      renderExoFormList();
+    });
+  });
+}
+
+$("btnAddExoInline").addEventListener("click", ()=>{
+  if (!template.length){ showToast("Ajoute d'abord des exercices au template (⚙️ Gérer les exercices)."); return; }
+  // simple picker via prompt-like select
+  const names = template.map(t=>t.name);
+  const pick = prompt("Nom exact de l'exercice à ajouter (depuis le template) :\n" + names.join(", "));
+  const t = template.find(x=>x.name.toLowerCase() === (pick||"").toLowerCase());
+  if (!t) { showToast("Exercice non trouvé dans le template."); return; }
+  modalExercises.push({ tempId: uid(), name:t.name, group:t.group, bodyweight:t.bodyweight, weight:0, series:[10] });
+  renderExoFormList();
+});
+
+/* ---- Chrono ---- */
+function updateChronoDisplay(){
+  const h = String(Math.floor(chronoSeconds/3600)).padStart(2,'0');
+  const m = String(Math.floor((chronoSeconds%3600)/60)).padStart(2,'0');
+  const s = String(chronoSeconds%60).padStart(2,'0');
+  $("chronoDisplay").textContent = `${h}:${m}:${s}`;
+}
+$("chronoStart").addEventListener("click", ()=>{
+  chronoRunning = true;
+  $("chronoStart").style.display="none"; $("chronoStop").style.display="inline-flex";
+  chronoInterval = setInterval(()=>{ chronoSeconds++; updateChronoDisplay(); }, 1000);
+});
+$("chronoStop").addEventListener("click", ()=> stopChrono());
+function stopChrono(){
+  chronoRunning = false;
+  clearInterval(chronoInterval);
+  $("chronoStart").style.display = "inline-flex";
+  $("chronoStop").style.display = "none";
+}
+$("chronoReset").addEventListener("click", ()=>{ chronoSeconds = 0; updateChronoDisplay(); });
+
+/* ---- Save / Delete session ---- */
+$("btnSaveSession").addEventListener("click", async ()=>{
+  const date = $("fDate").value;
+  if (!date) return showToast("Choisis une date.");
+  const feelingEl = $("feelingPicker").querySelector(".selected");
+  let volumeTotal = 0;
+  const exercises = modalExercises.map(e => {
+    const totalReps = (e.series||[]).reduce((a,b)=>a+b,0);
+    if (!e.bodyweight) volumeTotal += (e.weight||0) * totalReps;
+    return { name:e.name, group:e.group, bodyweight:!!e.bodyweight, weight:e.weight||0, series:[...e.series] };
+  });
+
+  const payload = {
+    date,
+    place: $("fPlace").value.trim(),
+    isRestDay: false,
+    durationSeconds: chronoSeconds,
+    feeling: feelingEl ? feelingEl.dataset.f : null,
+    note: $("fNote").value.trim(),
+    exercises,
+    volumeTotal,
+    updatedAt: serverTimestamp()
+  };
+
+  try{
+    if (editingSessionId){
+      await updateDoc(doc(db, SESSIONS_COL, editingSessionId), payload);
+      showToast("Séance mise à jour ✅");
+    } else {
+      payload.reactions = {};
+      payload.createdAt = serverTimestamp();
+      await addDoc(collection(db, SESSIONS_COL), payload);
+      showToast("Séance enregistrée ✅");
+    }
+    closeSessionModal();
+  }catch(e){
+    console.error(e);
+    showToast("Erreur d'enregistrement — vérifie ta connexion.");
+  }
+});
+
+$("btnDeleteSession").addEventListener("click", async ()=>{
+  if (!editingSessionId) return;
+  if (!confirm("Supprimer définitivement cette séance ?")) return;
+  await deleteDoc(doc(db, SESSIONS_COL, editingSessionId));
+  showToast("Séance supprimée.");
+  closeSessionModal();
+});
+
+/* ---- Rest day ---- */
+$("btnRestDay").addEventListener("click", async ()=>{
+  const note = prompt("Note pour ce jour de repos (optionnel) :", "");
+  if (note === null) return;
+  await addDoc(collection(db, SESSIONS_COL), {
+    date: todayISO(), isRestDay: true, note: note.trim(), place:"", reactions:{}, createdAt: serverTimestamp()
+  });
+  showToast("Jour de repos ajouté 😴");
+});
+
+/* ======================================================================
+   INIT
+   ====================================================================== */
+listenSessions();
+listenTemplate();
+renderCalendar();
+</script>
+</body>
+</html>
