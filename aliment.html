@@ -754,19 +754,27 @@ async function lookupNutrition(foodName){
     const searchCompact = searchNorm.replace(/[^a-z0-9]/g,"");
     const searchWords = searchNorm.split(/\s+/).filter(w => w.length > 2);
 
+    function wordFuzzyIncludes(pnameWords, word){
+      if (pnameWords.some(pw => pw.includes(word) || word.includes(pw))) return true;
+      const maxDist = word.length >= 7 ? 2 : 1;
+      return pnameWords.some(pw => levenshtein(word, pw) <= maxDist);
+    }
+
     // on cherche le produit dont le nom correspond VRAIMENT à ce qui a été tapé
     let best = null, bestScore = 0;
     for (const p of products){
       const pname = normalize(p.product_name_fr || p.product_name || "");
       if (!pname) continue;
       const pnameCompact = pname.replace(/[^a-z0-9]/g,"");
+      const pnameWords = pname.split(/\s+/).filter(w=>w.length>2);
       let score = 0;
       if (pnameCompact === searchCompact) score = 100;
+      else if (levenshtein(searchCompact, pnameCompact) <= (searchCompact.length>=7?2:1)) score = 90;
       else if (pnameCompact.includes(searchCompact) || searchCompact.includes(pnameCompact)) score = 70;
       else if (pname.includes(searchNorm)) score = 60;
       else if (searchWords.length){
-        const matchedWords = searchWords.filter(w => pname.includes(w));
-        // on n'accepte QUE si TOUS les mots tapés se retrouvent dans le nom du produit
+        const matchedWords = searchWords.filter(w => wordFuzzyIncludes(pnameWords, w));
+        // on n'accepte QUE si TOUS les mots tapés se retrouvent (même approximativement) dans le nom du produit
         if (matchedWords.length === searchWords.length) score = 40;
       }
       if (score > bestScore && p.nutriments && p.nutriments["energy-kcal_100g"] != null){
