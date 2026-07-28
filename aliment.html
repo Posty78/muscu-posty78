@@ -332,6 +332,10 @@
   <div class="modal">
     <h3>Compléter manuellement</h3>
     <div class="modal-sub" id="manualModalSub">—</div>
+    <div class="field">
+      <label>Poids (g)</label>
+      <input type="number" step="1" class="input" id="manGrams">
+    </div>
     <div class="field-row">
       <div class="field"><label>Calories (kcal)</label><input type="number" step="0.1" class="input" id="manCal"></div>
       <div class="field"><label>Protéines (g)</label><input type="number" step="0.1" class="input" id="manProt"></div>
@@ -993,7 +997,8 @@ function renderFoodList(){
 let editingManualId = null;
 function openManualModal(entry){
   editingManualId = entry.id;
-  $("manualModalSub").textContent = `${entry.name} — ${entry.grams}g`;
+  $("manualModalSub").textContent = entry.name;
+  $("manGrams").value = entry.grams || "";
   $("manCal").value = entry.calories || "";
   $("manProt").value = entry.protein || "";
   $("manCarb").value = entry.carbs || "";
@@ -1003,14 +1008,18 @@ function openManualModal(entry){
 }
 $("btnCancelManual").addEventListener("click", ()=> $("manualModal").classList.remove("open"));
 $("btnSaveManual").addEventListener("click", async ()=>{
+  const grams = parseFloat($("manGrams").value);
   const cal = parseFloat($("manCal").value), prot = parseFloat($("manProt").value);
   const carb = parseFloat($("manCarb").value), fat = parseFloat($("manFat").value);
   const fiber = parseFloat($("manFiber").value);
+  if (isNaN(grams) || grams <= 0){
+    return showToast("Renseigne un poids valide.");
+  }
   if (isNaN(cal) || isNaN(prot) || isNaN(carb) || isNaN(fat)){
     return showToast("Renseigne au moins calories/protéines/glucides/lipides.");
   }
   await updateDoc(doc(db, FOOD_COL, editingManualId), {
-    calories: cal, protein: prot, carbs: carb, fat: fat, fiber: isNaN(fiber)?0:fiber,
+    grams: grams, calories: cal, protein: prot, carbs: carb, fat: fat, fiber: isNaN(fiber)?0:fiber,
     notFound: false, source: "manual"
   });
   $("manualModal").classList.remove("open");
