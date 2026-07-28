@@ -137,7 +137,6 @@
   .micro-item.ok .status{color:var(--kick);}
   .manual-btn{background:transparent;border:1px dashed var(--macdo-red);color:var(--macdo-red);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;}
 
-  .reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
   .react-btn{background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;padding:5px 10px;font-size:14px;display:flex;align-items:center;gap:5px;color:var(--text-dim);}
   .react-btn .count{font-size:11px;}
   .react-btn:hover{border-color:var(--kick-dim);}
@@ -361,7 +360,6 @@ const SUPP_COL = "muscu_supplements";
 const SETTINGS_DOC = "muscu_settings/nutrition";
 
 const $ = (id) => document.getElementById(id);
-const REACTIONS = ["💪","🔥","😤","👏","🚀","🥵","💀","🦍","👊","🥇"];
 const SUPP_LIST = ["Whey","Créatine","Magnésium"];
 
 let isAdmin = false;
@@ -376,7 +374,6 @@ function showToast(msg){
   const t=$("toast"); t.textContent=msg; t.style.display="block";
   clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.style.display="none",2600);
 }
-function localReactionKey(id, emoji){ return `muscu_react_food_${id}_${emoji}`; }
 
 /* ============ BASE ALIMENTS GÉNÉRIQUES (pour 100g) ============ */
 const GENERIC_DB = {
@@ -435,6 +432,8 @@ const GENERIC_DB = {
   "big mac":         {cal:232,prot:11.9,carb:19.2,fat:11.9,fiber:1.4, sodium:460},
   "cheeseburger":    {cal:254,prot:13.4,carb:27,fat:10.9,fiber:1.5, sodium:490},
   "mcchicken":       {cal:245,prot:10.5,carb:29,fat:9.5,fiber:1.8},
+  "mc chicken":      {cal:245,prot:10.5,carb:29,fat:9.5,fiber:1.8},
+  "mac chicken":     {cal:245,prot:10.5,carb:29,fat:9.5,fiber:1.8},
   "nugget":          {cal:270,prot:15,carb:15,fat:16,fiber:1},
   "nuggets":         {cal:270,prot:15,carb:15,fat:16,fiber:1},
   "mcflurry":        {cal:200,prot:3.5,carb:29,fat:7,fiber:0.5},
@@ -458,8 +457,10 @@ function findGeneric(name){
   const n = normalize(name).replace(/s$/,"");
   if (GENERIC_DB[n]) return { key:n, data:GENERIC_DB[n] };
   if (GENERIC_DB[normalize(name)]) return { key:normalize(name), data:GENERIC_DB[normalize(name)] };
+  const compact = n.replace(/[^a-z0-9]/g,"");
   for (const key in GENERIC_DB){
-    if (n.includes(key) || key.includes(n)) return { key, data:GENERIC_DB[key] };
+    const keyCompact = key.replace(/[^a-z0-9]/g,"");
+    if (compact === keyCompact || n.includes(key) || key.includes(n)) return { key, data:GENERIC_DB[key] };
   }
   return null;
 }
@@ -522,27 +523,31 @@ async function lookupNutrition(foodName){
     if (!products.length) return null;
 
     const searchNorm = normalize(foodName);
+    const searchCompact = searchNorm.replace(/[^a-z0-9]/g,"");
     const searchWords = searchNorm.split(/\s+/).filter(w => w.length > 2);
 
-    // on cherche le produit dont le nom contient vraiment les mots tapés
+    // on cherche le produit dont le nom correspond VRAIMENT à ce qui a été tapé
     let best = null, bestScore = 0;
     for (const p of products){
       const pname = normalize(p.product_name_fr || p.product_name || "");
       if (!pname) continue;
+      const pnameCompact = pname.replace(/[^a-z0-9]/g,"");
       let score = 0;
-      if (pname === searchNorm) score = 100;
-      else if (pname.includes(searchNorm)) score = 50;
-      else {
+      if (pnameCompact === searchCompact) score = 100;
+      else if (pnameCompact.includes(searchCompact) || searchCompact.includes(pnameCompact)) score = 70;
+      else if (pname.includes(searchNorm)) score = 60;
+      else if (searchWords.length){
         const matchedWords = searchWords.filter(w => pname.includes(w));
-        score = matchedWords.length === searchWords.length && searchWords.length > 0 ? 30 : matchedWords.length;
+        // on n'accepte QUE si TOUS les mots tapés se retrouvent dans le nom du produit
+        if (matchedWords.length === searchWords.length) score = 40;
       }
       if (score > bestScore && p.nutriments && p.nutriments["energy-kcal_100g"] != null){
         bestScore = score;
         best = p;
       }
     }
-    // si rien ne correspond vraiment au nom tapé, on considère que ce n'est pas fiable
-    if (!best || bestScore < (searchWords.length > 0 ? Math.min(searchWords.length, 1) : 1)) return null;
+    // en dessous de ce seuil, on considère que ça ne correspond pas vraiment
+    if (!best || bestScore < 40) return null;
 
     const n = best.nutriments;
     const per100 = {
@@ -705,7 +710,7 @@ $("quickAddInput").addEventListener("keydown", async (e)=>{
     await addDoc(collection(db, FOOD_COL), {
       date: currentDate, rawText: line, name: parsed.foodName, grams: parsed.grams,
       notFound: true, calories:0, protein:0, carbs:0, fat:0, fiber:0,
-      reactions:{}, createdAt: serverTimestamp()
+      createdAt: serverTimestamp()
     });
     $("quickAddStatus").textContent = `"${parsed.foodName}" non trouvé — retape la ligne avec plus de précision (ex: nom de marque exact).`;
     return;
@@ -715,7 +720,7 @@ $("quickAddInput").addEventListener("keydown", async (e)=>{
   await addDoc(collection(db, FOOD_COL), {
     date: currentDate, rawText: line, name: result.name, grams: Math.round(parsed.grams),
     notFound: false, source: result.source, ...scaled,
-    reactions:{}, createdAt: serverTimestamp()
+    createdAt: serverTimestamp()
   });
   $("quickAddStatus").textContent = `✅ ${result.name} — ${Math.round(parsed.grams)}g ajouté.`;
 });
@@ -727,12 +732,6 @@ function renderFoodList(){
     return;
   }
   $("foodList").innerHTML = foodEntries.map(f=>{
-    const reactions = f.reactions || {};
-    const reactHtml = REACTIONS.map(e=>{
-      const count = reactions[e]||0;
-      const reacted = localStorage.getItem(localReactionKey(f.id,e))==="1";
-      return `<button class="react-btn ${reacted?'reacted':''}" data-emoji="${e}">${e}<span class="count">${count>0?count:''}</span></button>`;
-    }).join("");
     return `
     <div class="food-item ${f.notFound?'not-found':''}" data-id="${f.id}">
       <div>
@@ -749,14 +748,12 @@ function renderFoodList(){
         ${f.notFound && isAdmin ? `<button class="manual-btn fill-manual" title="Compléter manuellement">✍️ Compléter</button>` : ''}
         ${isAdmin ? `<button class="icon-btn danger-hover del-food" title="Supprimer">🗑</button>` : ''}
       </div>
-      <div class="reactions">${reactHtml}</div>
     </div>`;
   }).join("");
 
   foodEntries.forEach(f=>{
     const card = document.querySelector(`.food-item[data-id="${f.id}"]`);
     if (!card) return;
-    card.querySelectorAll(".react-btn").forEach(btn=>btn.addEventListener("click", ()=>handleReact(f.id, btn.dataset.emoji)));
     const del = card.querySelector(".del-food");
     if (del) del.addEventListener("click", async ()=>{
       if (!confirm(`Supprimer "${f.name}" ?`)) return;
@@ -793,15 +790,6 @@ $("btnSaveManual").addEventListener("click", async ()=>{
   $("manualModal").classList.remove("open");
   showToast("Valeurs enregistrées ✅");
 });
-
-async function handleReact(id, emoji){
-  const key = localReactionKey(id, emoji);
-  const already = localStorage.getItem(key)==="1";
-  try{
-    await updateDoc(doc(db, FOOD_COL, id), { [`reactions.${emoji}`]: increment(already?-1:1) });
-    if (already) localStorage.removeItem(key); else localStorage.setItem(key,"1");
-  }catch(e){ console.error(e); }
-}
 
 function renderTotals(){
   const targets = computeTargets();
