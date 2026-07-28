@@ -122,10 +122,20 @@
   .supp-grid{display:flex;gap:10px;flex-wrap:wrap;}
   .supp-chip{
     display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);
-    border-radius:999px;padding:10px 16px;font-size:13px;font-weight:700;color:var(--text-dim);
+    border-radius:999px;padding:8px 8px 8px 16px;font-size:13px;font-weight:700;color:var(--text-dim);
   }
-  .supp-chip.checked{border-color:var(--kick);background:rgba(83,252,24,0.1);color:var(--text);}
-  .supp-chip input{accent-color:var(--kick);width:16px;height:16px;}
+  .supp-chip.filled{border-color:var(--kick);background:rgba(83,252,24,0.1);color:var(--text);}
+  .supp-chip input[type=number]{
+    width:60px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);
+    border-radius:7px;padding:5px 6px;text-align:center;font-size:12px;
+  }
+  .supp-chip .unit{font-size:11px;color:var(--text-faint);}
+  .micro-item.deficient{border-color:var(--macdo-red);}
+  .micro-item.ok{border-color:var(--kick-dim);}
+  .micro-item .status{font-size:9px;font-weight:700;margin-top:3px;}
+  .micro-item.deficient .status{color:var(--macdo-red);}
+  .micro-item.ok .status{color:var(--kick);}
+  .manual-btn{background:transparent;border:1px dashed var(--macdo-red);color:var(--macdo-red);border-radius:7px;padding:5px 10px;font-size:11px;font-weight:700;}
 
   .reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
   .react-btn{background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;padding:5px 10px;font-size:14px;display:flex;align-items:center;gap:5px;color:var(--text-dim);}
@@ -282,6 +292,27 @@
     <div class="modal-footer">
       <button class="btn ghost" id="btnCancelSettings">Annuler</button>
       <button class="btn" id="btnSaveSettings">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANUAL ENTRY MODAL -->
+<div class="modal-overlay" id="manualModal">
+  <div class="modal">
+    <h3>Compléter manuellement</h3>
+    <div class="modal-sub" id="manualModalSub">—</div>
+    <div class="field-row">
+      <div class="field"><label>Calories (kcal)</label><input type="number" step="0.1" class="input" id="manCal"></div>
+      <div class="field"><label>Protéines (g)</label><input type="number" step="0.1" class="input" id="manProt"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Glucides (g)</label><input type="number" step="0.1" class="input" id="manCarb"></div>
+      <div class="field"><label>Lipides (g)</label><input type="number" step="0.1" class="input" id="manFat"></div>
+    </div>
+    <div class="field"><label>Fibres (g) — optionnel</label><input type="number" step="0.1" class="input" id="manFiber"></div>
+    <div class="modal-footer">
+      <button class="btn ghost" id="btnCancelManual">Annuler</button>
+      <button class="btn" id="btnSaveManual">💾 Enregistrer</button>
     </div>
   </div>
 </div>
@@ -715,6 +746,7 @@ function renderFoodList(){
         <span><b>${f.fat??'—'}</b>g lip</span>
       </div>` : ''}
       <div class="food-actions">
+        ${f.notFound && isAdmin ? `<button class="manual-btn fill-manual" title="Compléter manuellement">✍️ Compléter</button>` : ''}
         ${isAdmin ? `<button class="icon-btn danger-hover del-food" title="Supprimer">🗑</button>` : ''}
       </div>
       <div class="reactions">${reactHtml}</div>
@@ -730,8 +762,37 @@ function renderFoodList(){
       if (!confirm(`Supprimer "${f.name}" ?`)) return;
       await deleteDoc(doc(db, FOOD_COL, f.id));
     });
+    const fillBtn = card.querySelector(".fill-manual");
+    if (fillBtn) fillBtn.addEventListener("click", ()=> openManualModal(f));
   });
 }
+
+let editingManualId = null;
+function openManualModal(entry){
+  editingManualId = entry.id;
+  $("manualModalSub").textContent = `${entry.name} — ${entry.grams}g`;
+  $("manCal").value = entry.calories || "";
+  $("manProt").value = entry.protein || "";
+  $("manCarb").value = entry.carbs || "";
+  $("manFat").value = entry.fat || "";
+  $("manFiber").value = entry.fiber || "";
+  $("manualModal").classList.add("open");
+}
+$("btnCancelManual").addEventListener("click", ()=> $("manualModal").classList.remove("open"));
+$("btnSaveManual").addEventListener("click", async ()=>{
+  const cal = parseFloat($("manCal").value), prot = parseFloat($("manProt").value);
+  const carb = parseFloat($("manCarb").value), fat = parseFloat($("manFat").value);
+  const fiber = parseFloat($("manFiber").value);
+  if (isNaN(cal) || isNaN(prot) || isNaN(carb) || isNaN(fat)){
+    return showToast("Renseigne au moins calories/protéines/glucides/lipides.");
+  }
+  await updateDoc(doc(db, FOOD_COL, editingManualId), {
+    calories: cal, protein: prot, carbs: carb, fat: fat, fiber: isNaN(fiber)?0:fiber,
+    notFound: false, source: "manual"
+  });
+  $("manualModal").classList.remove("open");
+  showToast("Valeurs enregistrées ✅");
+});
 
 async function handleReact(id, emoji){
   const key = localReactionKey(id, emoji);
@@ -767,35 +828,61 @@ function renderTotals(){
   setGauge("fiberVal","fiberTarget","fiberBar", sum.fiber, targets.fiber);
 
   const microDefs = [
-    {k:"calcium", l:"Calcium", u:"mg"}, {k:"iron", l:"Fer", u:"mg"},
-    {k:"vitaminC", l:"Vit. C", u:"mg"}, {k:"sodium", l:"Sodium", u:"mg"},
-    {k:"potassium", l:"Potassium", u:"mg"}, {k:"magnesium", l:"Magnésium", u:"mg"},
+    {k:"calcium", l:"Calcium", u:"mg", rda:950, mode:"min"},
+    {k:"iron", l:"Fer", u:"mg", rda:11, mode:"min"},
+    {k:"vitaminC", l:"Vit. C", u:"mg", rda:110, mode:"min"},
+    {k:"potassium", l:"Potassium", u:"mg", rda:3500, mode:"min"},
+    {k:"magnesium", l:"Magnésium", u:"mg", rda:380, mode:"min"},
+    {k:"sodium", l:"Sodium", u:"mg", rda:2300, mode:"max"},
   ];
   $("microGrid").innerHTML = microDefs.map(m=>{
     const known = has[m.k];
-    return `<div class="micro-item"><div class="v ${known?'':'unknown'}">${known ? Math.round(sum[m.k])+m.u : 'non renseigné'}</div><div class="l">${m.l}</div></div>`;
+    if (!known) return `<div class="micro-item"><div class="v unknown">non renseigné</div><div class="l">${m.l}</div></div>`;
+    const val = sum[m.k];
+    const pct = (val / m.rda) * 100;
+    let cls = "ok", statusTxt = "OK";
+    if (m.mode === "min"){
+      if (pct < 50){ cls = "deficient"; statusTxt = "Carence probable"; }
+      else if (pct < 80){ cls = "deficient"; statusTxt = "Un peu faible"; }
+    } else {
+      if (pct > 100){ cls = "deficient"; statusTxt = "Dépassé"; }
+    }
+    return `<div class="micro-item ${cls}"><div class="v">${Math.round(val)}${m.u}</div><div class="l">${m.l} (obj. ${m.rda}${m.u})</div><div class="status">${statusTxt}</div></div>`;
   }).join("");
 }
 
 /* ============ SUPPLEMENTS ============ */
+const SUPP_UNITS = { "Whey":"g", "Créatine":"g", "Magnésium":"mg" };
+
 function renderSupplements(){
-  const customKeys = Object.keys(suppState).filter(k=>!SUPP_LIST.includes(k) && k!=="reactions");
+  const customKeys = Object.keys(suppState).filter(k=>!SUPP_LIST.includes(k) && k!=="reactions" && k!=="units");
   const all = [...SUPP_LIST, ...customKeys];
+  const units = suppState.units || {};
   $("suppGrid").innerHTML = all.map(name=>{
-    const checked = !!suppState[name];
-    return `<label class="supp-chip ${checked?'checked':''}"><input type="checkbox" data-supp="${escapeHtml(name)}" ${checked?'checked':''} ${isAdmin?'':'disabled'}> ${escapeHtml(name)}</label>`;
+    const dose = suppState[name] || "";
+    const unit = SUPP_UNITS[name] || units[name] || "g";
+    return `<label class="supp-chip ${dose?'filled':''}">${escapeHtml(name)}
+      <input type="number" step="0.1" data-supp="${escapeHtml(name)}" value="${dose}" placeholder="0" ${isAdmin?'':'disabled'}>
+      <span class="unit">${unit}</span>
+    </label>`;
   }).join("") + (isAdmin ? `<button class="btn ghost small" id="btnAddSupp">+ Ajouter</button>` : '');
 
-  $("suppGrid").querySelectorAll("[data-supp]").forEach(cb=>{
-    cb.addEventListener("change", async ()=>{
-      await setDoc(doc(db, SUPP_COL, currentDate), { [cb.dataset.supp]: cb.checked }, { merge:true });
+  $("suppGrid").querySelectorAll("[data-supp]").forEach(inp=>{
+    let debounce;
+    inp.addEventListener("input", ()=>{
+      clearTimeout(debounce);
+      debounce = setTimeout(async ()=>{
+        const val = parseFloat(inp.value);
+        await setDoc(doc(db, SUPP_COL, currentDate), { [inp.dataset.supp]: isNaN(val)?0:val }, { merge:true });
+      }, 500);
     });
   });
   const addBtn = $("btnAddSupp");
   if (addBtn) addBtn.addEventListener("click", async ()=>{
     const name = prompt("Nom du nouveau complément :");
     if (!name) return;
-    await setDoc(doc(db, SUPP_COL, currentDate), { [name.trim()]: true }, { merge:true });
+    const unit = prompt("Unité (g, mg, gélules...) :", "g") || "g";
+    await setDoc(doc(db, SUPP_COL, currentDate), { [name.trim()]: 0, units: { ...(suppState.units||{}), [name.trim()]: unit } }, { merge:true });
   });
 }
 
