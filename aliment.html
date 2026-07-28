@@ -100,6 +100,20 @@
   .micro-item .v.unknown{color:var(--text-faint);font-size:11px;font-weight:600;}
   .micro-item .l{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.3px;margin-top:2px;}
 
+  .week-verdict{font-size:13px;color:var(--text-dim);margin-bottom:16px;text-align:center;}
+  .week-verdict b{color:var(--text);}
+  .week-bars{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;height:110px;}
+  .week-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;cursor:default;}
+  .week-bar-track{width:100%;max-width:32px;height:100%;display:flex;align-items:flex-end;background:var(--bg-elevated);border-radius:6px;overflow:hidden;border:1px solid var(--border);}
+  .week-bar-fill{width:100%;border-radius:6px 6px 0 0;transition:height .3s ease;}
+  .week-bar-fill.good{background:var(--kick);}
+  .week-bar-fill.mid{background:var(--macdo-gold);}
+  .week-bar-fill.bad{background:var(--macdo-red);}
+  .week-bar-fill.empty{background:var(--text-faint);opacity:0.3;}
+  .week-bar-label{font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;}
+  .week-bar-today{color:var(--kick);}
+  .week-bar-pct{font-size:9px;color:var(--text-faint);}
+
   /* food list */
   .food-item{
     display:flex;justify-content:space-between;align-items:center;gap:10px;
@@ -237,6 +251,14 @@
   </section>
 
   <section class="section">
+    <div class="section-head"><h2>📅 7 derniers jours</h2></div>
+    <div class="totals-card">
+      <div class="week-verdict" id="weekVerdict">Chargement...</div>
+      <div class="week-bars" id="weekBars"></div>
+    </div>
+  </section>
+
+  <section class="section">
     <div class="section-head"><h2>🍽️ Aliments du jour</h2></div>
     <div id="foodList"></div>
   </section>
@@ -337,7 +359,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, setDoc, getDoc,
-  onSnapshot, query, where, increment, serverTimestamp
+  onSnapshot, query, where, increment, serverTimestamp, documentId
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -623,6 +645,7 @@ async function loadSettings(){
     }
   }catch(e){ console.error(e); }
   renderTotals();
+  renderWeekRecap();
 }
 $("btnSettings").addEventListener("click", ()=>{
   $("setHeight").value = settings.heightCm;
@@ -642,6 +665,7 @@ $("btnSaveSettings").addEventListener("click", async ()=>{
   await setDoc(doc(db, "muscu_settings", "nutrition"), settings);
   $("settingsModal").classList.remove("open");
   renderTotals();
+  renderWeekRecap();
   showToast("Besoins mis à jour ✅");
 });
 
@@ -805,6 +829,11 @@ function renderTotals(){
     sum.magnesium += parseFloat(suppState["Magnésium"]) || 0;
     has.magnesium = true;
   }
+  // la whey apporte des protéines/calories, on l'ajoute au total (profil moyen 80% protéines)
+  if (suppState["Whey"]){
+    const g = parseFloat(suppState["Whey"]) || 0;
+    sum.calories += g*4; sum.protein += g*0.8; sum.carbs += g*0.07; sum.fat += g*0.05;
+  }
 
   const setGauge = (valId,targetId,barId,val,target)=>{
     $(valId).textContent = Math.round(val);
@@ -879,9 +908,88 @@ function renderSupplements(){
   });
 }
 
+/* ============ RÉCAP 7 DERNIERS JOURS ============ */
+let weekFoodByDate = {};
+let weekSuppByDate = {};
+
+function last7Dates(){
+  const arr = [];
+  const d = new Date();
+  for (let i=6;i>=0;i--){
+    const dd = new Date(d); dd.setDate(d.getDate()-i);
+    arr.push(dd.toISOString().slice(0,10));
+  }
+  return arr;
+}
+
+function listenWeekRecap(){
+  const dates = last7Dates();
+  const qWeekFood = query(collection(db, FOOD_COL), where("date","in",dates));
+  onSnapshot(qWeekFood, (snap)=>{
+    weekFoodByDate = {};
+    dates.forEach(d=> weekFoodByDate[d] = 0);
+    snap.docs.forEach(docSnap=>{
+      const f = docSnap.data();
+      if (!f.notFound && weekFoodByDate[f.date] != null){
+        weekFoodByDate[f.date] += (f.calories||0);
+      }
+    });
+    renderWeekRecap();
+  });
+
+  const qWeekSupp = query(collection(db, SUPP_COL), where(documentId(),"in",dates));
+  onSnapshot(qWeekSupp, (snap)=>{
+    weekSuppByDate = {};
+    snap.docs.forEach(docSnap=>{
+      const d = docSnap.data();
+      weekSuppByDate[docSnap.id] = (parseFloat(d["Whey"])||0) * 4;
+    });
+    renderWeekRecap();
+  });
+}
+
+function renderWeekRecap(){
+  const dates = last7Dates();
+  const target = computeTargets().calories;
+  const todayIso = todayISO();
+  let goodCount=0, midCount=0, badCount=0, emptyCount=0;
+
+  const bars = dates.map(d=>{
+    const cal = (weekFoodByDate[d]||0) + (weekSuppByDate[d]||0);
+    const pct = target>0 ? (cal/target)*100 : 0;
+    let cls = "empty";
+    if (cal <= 0){ emptyCount++; }
+    else if (pct >= 85 && pct <= 115){ cls="good"; goodCount++; }
+    else if ((pct >= 60 && pct < 85) || (pct > 115 && pct <= 140)){ cls="mid"; midCount++; }
+    else { cls="bad"; badCount++; }
+    const heightPct = Math.min(100, Math.max(4, pct));
+    const dow = new Date(d+"T12:00:00").toLocaleDateString("fr-FR",{weekday:'short'});
+    return `
+      <div class="week-bar-col" title="${d} — ${Math.round(cal)} kcal">
+        <div class="week-bar-pct">${cal>0?Math.round(pct)+'%':''}</div>
+        <div class="week-bar-track"><div class="week-bar-fill ${cls}" style="height:${cal>0?heightPct:100}%;"></div></div>
+        <div class="week-bar-label ${d===todayIso?'week-bar-today':''}">${dow}</div>
+      </div>`;
+  }).join("");
+  $("weekBars").innerHTML = bars;
+
+  let verdict;
+  if (emptyCount >= 4){
+    verdict = `<b>Pas assez de données</b> — seulement ${7-emptyCount}/7 jours renseignés cette semaine.`;
+  } else if (badCount + emptyCount >= 4){
+    verdict = `⚠️ <b>${badCount+emptyCount}/7 jours</b> loin de tes besoins caloriques cette semaine.`;
+  } else if (goodCount >= 5){
+    verdict = `✅ <b>${goodCount}/7 jours</b> dans les clous cette semaine, nickel.`;
+  } else {
+    verdict = `${goodCount}/7 jours dans les clous, ${midCount} un peu à côté, ${badCount+emptyCount} loin du compte.`;
+  }
+  $("weekVerdict").innerHTML = verdict;
+}
+
 /* ============ INIT ============ */
 loadSettings();
 setDate(todayISO());
+listenWeekRecap();
 </script>
 </body>
 </html>
