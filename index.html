@@ -151,40 +151,40 @@
   /* ---------- CALENDAR ---------- */
   .calendar{
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:18px;
+    padding:16px;max-width:380px;margin:0 auto;
   }
-  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-  .cal-head .month{font-family:var(--display);font-size:18px;letter-spacing:0.5px;}
+  .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .cal-head .month{font-family:var(--display);font-size:15px;letter-spacing:0.6px;text-transform:uppercase;}
   .cal-nav{display:flex;gap:6px;}
   .cal-nav button{
-    width:30px;height:30px;border-radius:8px;background:var(--bg-elevated);
-    border:1px solid var(--border);color:var(--text);font-size:14px;
+    width:24px;height:24px;border-radius:7px;background:var(--bg-elevated);
+    border:1px solid var(--border);color:var(--text-dim);font-size:13px;
+    display:flex;align-items:center;justify-content:center;
   }
-  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-  .cal-dow{text-align:center;font-size:10px;color:var(--text-faint);font-weight:700;padding-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;}
+  .cal-nav button:hover{color:var(--text);border-color:var(--text-faint);}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .cal-dow{text-align:center;font-size:9px;color:var(--text-faint);font-weight:700;padding-bottom:4px;text-transform:uppercase;letter-spacing:0.4px;}
   .cal-day{
-    aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    font-size:13px;font-weight:600;color:var(--text-faint);background:var(--bg-elevated);
+    aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:600;color:var(--text-faint);background:var(--bg-elevated);
     cursor:default;position:relative;border:1px solid transparent;
-    transition:transform .12s ease, border-color .12s ease;
+    transition:transform .1s ease, border-color .1s ease;
   }
   .cal-day.empty{background:transparent;}
   .cal-day.has-session{
-    background:linear-gradient(160deg, rgba(83,252,24,0.22), rgba(83,252,24,0.06));
-    color:var(--text);font-weight:800;cursor:pointer;
-    border:1px solid rgba(83,252,24,0.4);
-    box-shadow:0 0 0 0 rgba(83,252,24,0);
+    background:var(--kick);color:#08130a;font-weight:800;cursor:pointer;border:1px solid var(--kick);
   }
-  .cal-day.has-session:hover{transform:translateY(-2px);border-color:var(--kick);box-shadow:0 6px 16px rgba(83,252,24,0.18);}
+  .cal-day.has-session:hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(83,252,24,0.35);z-index:2;}
   .cal-day.has-rest{
-    background:linear-gradient(160deg, rgba(242,183,5,0.18), rgba(242,183,5,0.05));
-    border:1px solid rgba(242,183,5,0.35);color:var(--text-dim);font-weight:700;cursor:pointer;
+    background:rgba(242,183,5,0.16);border:1px solid rgba(242,183,5,0.4);color:var(--macdo-gold);font-weight:700;cursor:pointer;
   }
-  .cal-day.has-rest:hover{transform:translateY(-2px);border-color:var(--macdo-gold);}
-  .cal-day.selected{outline:2px solid var(--kick);outline-offset:1px;}
-  .cal-day .dot-row{display:flex;gap:2px;margin-top:3px;}
-  .cal-day .mini-dot{width:5px;height:5px;border-radius:50%;background:var(--kick);box-shadow:0 0 5px rgba(83,252,24,0.7);}
-  .cal-day.has-rest .mini-dot{background:var(--macdo-gold);box-shadow:0 0 5px rgba(242,183,5,0.7);}
+  .cal-day.has-rest:hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(242,183,5,0.25);z-index:2;}
+  .cal-day.selected{outline:2px solid #fff;outline-offset:1px;}
+  .cal-legend{display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:10px;color:var(--text-faint);}
+  .cal-legend span{display:flex;align-items:center;gap:5px;}
+  .cal-legend .lg-dot{width:8px;height:8px;border-radius:3px;}
+  .cal-legend .lg-dot.session{background:var(--kick);}
+  .cal-legend .lg-dot.rest{background:rgba(242,183,5,0.6);border:1px solid var(--macdo-gold);}
 
   /* ---------- FILTER ---------- */
   .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center;}
@@ -402,6 +402,10 @@
         <div class="cal-nav"><button id="calNext">›</button></div>
       </div>
       <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i class="lg-dot session"></i> Séance</span>
+        <span><i class="lg-dot rest"></i> Repos</span>
+      </div>
     </div>
 
     <div class="filter-row">
@@ -468,6 +472,9 @@
     </div>
 
     <div id="exoFormList"></div>
+    <label class="bw-check" style="margin-top:8px;">
+      <input type="checkbox" id="toggleExoReorder"> Activer la réorganisation (glisser-déposer)
+    </label>
     <button class="btn secondary small" id="btnAddExoInline" style="margin-top:6px;">+ Ajouter un exercice à cette séance</button>
     <div id="exoPickerList" class="exo-picker-list" style="display:none;"></div>
 
@@ -516,7 +523,10 @@
 <div class="modal-overlay" id="templateModal">
   <div class="modal">
     <h3>Gérer les exercices</h3>
-    <div class="modal-sub">Ce template sert de base à chaque "Nouvelle séance". Glisse-dépose pour réordonner.</div>
+    <div class="modal-sub">Ce template sert de base à chaque "Nouvelle séance".</div>
+    <label class="bw-check" style="margin-bottom:14px;">
+      <input type="checkbox" id="toggleTemplateReorder"> Activer la réorganisation (glisser-déposer)
+    </label>
     <div id="templateList"></div>
 
     <div class="field-row" style="margin-top:16px;">
@@ -744,7 +754,7 @@ function renderCalendar(){
     if (hasReal) cls += " has-session";
     else if (hasRest) cls += " has-rest";
     if (selectedCalDay === iso) cls += " selected";
-    html += `<div class="${cls}" data-date="${iso}">${day}${entries.length ? `<div class="dot-row"><div class="mini-dot"></div></div>`:''}</div>`;
+    html += `<div class="${cls}" data-date="${iso}" title="${entries.length} entrée(s) le ${iso}">${day}</div>`;
   }
   $("calGrid").innerHTML = html;
   $("calGrid").querySelectorAll(".cal-day.has-session, .cal-day.has-rest").forEach(el=>{
@@ -883,9 +893,10 @@ $("btnManageTemplate").addEventListener("click", ()=> $("templateModal").classLi
 $("btnCloseTemplate").addEventListener("click", ()=> $("templateModal").classList.remove("open"));
 
 function renderTemplateList(){
+  const reorderOn = $("toggleTemplateReorder").checked;
   $("templateList").innerHTML = template.map(t => `
-    <div class="template-item" draggable="true" data-id="${t.id}">
-      <div><b>${escapeHtml(t.name)}</b> <span class="exo-group-tag">${t.group}</span> ${t.bodyweight?'<span class="exo-group-tag">poids du corps</span>':''}</div>
+    <div class="template-item" draggable="${reorderOn}" data-id="${t.id}">
+      <div>${reorderOn ? '<span class="drag-handle">⠿</span> ' : ''}<b>${escapeHtml(t.name)}</b> <span class="exo-group-tag">${t.group}</span> ${t.bodyweight?'<span class="exo-group-tag">poids du corps</span>':''}</div>
       <button class="icon-btn danger-hover" data-remove="${t.id}" title="Supprimer définitivement">🗑</button>
     </div>
   `).join("") || `<div class="empty-state">Aucun exercice dans le template.</div>`;
@@ -897,12 +908,15 @@ function renderTemplateList(){
     });
   });
 
-  enableDragReorder($("templateList"), async (orderedIds)=>{
-    for (let i=0;i<orderedIds.length;i++){
-      await updateDoc(doc(db, TEMPLATE_COL, orderedIds[i]), { order: i });
-    }
-  });
+  if (reorderOn){
+    enableDragReorder($("templateList"), async (orderedIds)=>{
+      for (let i=0;i<orderedIds.length;i++){
+        await updateDoc(doc(db, TEMPLATE_COL, orderedIds[i]), { order: i });
+      }
+    });
+  }
 }
+$("toggleTemplateReorder").addEventListener("change", renderTemplateList);
 
 $("btnAddTemplateExo").addEventListener("click", async ()=>{
   const name = $("newExoName").value.trim();
@@ -963,6 +977,7 @@ async function openSessionModal(existing){
   $("btnDeleteSession").style.display = existing ? "inline-flex" : "none";
 
   renderFeelingPicker(existing ? existing.feeling : null);
+  $("toggleExoReorder").checked = false;
 
   if (existing){
     modalExercises = (existing.exercises||[]).map(e => ({ tempId: uid(), ...e, series:[...(e.series||[])] }));
@@ -1003,10 +1018,11 @@ function renderFeelingPicker(selected){
 }
 
 function renderExoFormList(){
+  const reorderOn = $("toggleExoReorder").checked;
   $("exoFormList").innerHTML = modalExercises.map(e => `
-    <div class="exo-form-card" draggable="true" data-tempid="${e.tempId}">
+    <div class="exo-form-card" draggable="${reorderOn}" data-tempid="${e.tempId}">
       <div class="exo-form-head">
-        <div class="exo-form-title"><span class="drag-handle">⠿</span>${escapeHtml(e.name)} <span class="exo-group-tag">${e.group}</span></div>
+        <div class="exo-form-title">${reorderOn ? '<span class="drag-handle">⠿</span>' : ''}${escapeHtml(e.name)} <span class="exo-group-tag">${e.group}</span></div>
         <div class="exo-form-actions">
           <button class="btn ghost small" data-remove-today="${e.tempId}">Retirer aujourd'hui</button>
         </div>
@@ -1027,10 +1043,13 @@ function renderExoFormList(){
   `).join("") || `<div class="empty-state">Aucun exercice. Ajoute-en un ci-dessous.</div>`;
 
   bindExoFormEvents();
-  enableDragReorder($("exoFormList"), (orderedTempIds)=>{
-    modalExercises.sort((a,b)=> orderedTempIds.indexOf(a.tempId) - orderedTempIds.indexOf(b.tempId));
-  });
+  if (reorderOn){
+    enableDragReorder($("exoFormList"), (orderedTempIds)=>{
+      modalExercises.sort((a,b)=> orderedTempIds.indexOf(a.tempId) - orderedTempIds.indexOf(b.tempId));
+    });
+  }
 }
+$("toggleExoReorder").addEventListener("change", renderExoFormList);
 
 function bindExoFormEvents(){
   $("exoFormList").querySelectorAll("[data-remove-today]").forEach(btn=>{
