@@ -399,12 +399,25 @@ const GENERIC_DB = {
   "jambon blanc":    {cal:145,prot:21,carb:1,fat:6,fiber:0, sodium:1050},
   "bacon":           {cal:541,prot:37,carb:1.4,fat:42,fiber:0, sodium:1717},
   "avocat":          {cal:160,prot:2,carb:8.5,fat:14.7,fiber:6.7},
+  "frite":           {cal:312,prot:3.4,carb:41,fat:15,fiber:3.6, sodium:210},
+  "frites":          {cal:312,prot:3.4,carb:41,fat:15,fiber:3.6, sodium:210},
+  "big mac":         {cal:232,prot:11.9,carb:19.2,fat:11.9,fiber:1.4, sodium:460},
+  "cheeseburger":    {cal:254,prot:13.4,carb:27,fat:10.9,fiber:1.5, sodium:490},
+  "mcchicken":       {cal:245,prot:10.5,carb:29,fat:9.5,fiber:1.8},
+  "nugget":          {cal:270,prot:15,carb:15,fat:16,fiber:1},
+  "nuggets":         {cal:270,prot:15,carb:15,fat:16,fiber:1},
+  "mcflurry":        {cal:200,prot:3.5,carb:29,fat:7,fiber:0.5},
+  "coca":            {cal:42,prot:0,carb:10.6,fat:0,fiber:0},
+  "coca cola":       {cal:42,prot:0,carb:10.6,fat:0,fiber:0},
+  "milkshake":       {cal:130,prot:3.5,carb:21,fat:3.5,fiber:0},
+  "salade cesar":    {cal:110,prot:8,carb:5,fat:6.5,fiber:1.5},
 };
 const PORTION_TABLE = {
   "pomme":150, "banane":120, "orange":150, "poire":150, "fraise":15,
   "oeuf":55, "tranche de pain":30, "yaourt":125, "pomme de terre":150,
   "tomate":120, "carotte":80, "twix":50, "snickers":50, "kitkat":45, "mars":51,
-  "big mac":220, "cheeseburger":115, "cookie":25,
+  "big mac":219, "cheeseburger":119, "cookie":25, "nugget":16, "nuggets":16,
+  "mcflurry":200, "coca":330, "salade cesar":250,
 };
 
 function normalize(s){
@@ -471,12 +484,36 @@ async function lookupNutrition(foodName){
     return { name: foodName, per100: generic.data, source: "generic" };
   }
   try{
-    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(foodName)}&search_simple=1&action=process&json=1&page_size=1&fields=product_name,nutriments`;
+    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(foodName)}&search_simple=1&action=process&json=1&page_size=20&sort_by=unique_scans_n&lc=fr&fields=product_name,product_name_fr,nutriments`;
     const res = await fetch(url);
     const data = await res.json();
-    const product = data.products && data.products[0];
-    if (!product || !product.nutriments) return null;
-    const n = product.nutriments;
+    const products = data.products || [];
+    if (!products.length) return null;
+
+    const searchNorm = normalize(foodName);
+    const searchWords = searchNorm.split(/\s+/).filter(w => w.length > 2);
+
+    // on cherche le produit dont le nom contient vraiment les mots tapés
+    let best = null, bestScore = 0;
+    for (const p of products){
+      const pname = normalize(p.product_name_fr || p.product_name || "");
+      if (!pname) continue;
+      let score = 0;
+      if (pname === searchNorm) score = 100;
+      else if (pname.includes(searchNorm)) score = 50;
+      else {
+        const matchedWords = searchWords.filter(w => pname.includes(w));
+        score = matchedWords.length === searchWords.length && searchWords.length > 0 ? 30 : matchedWords.length;
+      }
+      if (score > bestScore && p.nutriments && p.nutriments["energy-kcal_100g"] != null){
+        bestScore = score;
+        best = p;
+      }
+    }
+    // si rien ne correspond vraiment au nom tapé, on considère que ce n'est pas fiable
+    if (!best || bestScore < (searchWords.length > 0 ? Math.min(searchWords.length, 1) : 1)) return null;
+
+    const n = best.nutriments;
     const per100 = {
       cal: n["energy-kcal_100g"] ?? null,
       prot: n["proteins_100g"] ?? null,
@@ -491,7 +528,7 @@ async function lookupNutrition(foodName){
       magnesium: n["magnesium_100g"] != null ? n["magnesium_100g"]*1000 : null,
     };
     if (per100.cal == null) return null;
-    return { name: product.product_name || foodName, per100, source: "off" };
+    return { name: best.product_name_fr || best.product_name || foodName, per100, source: "off" };
   }catch(e){
     console.error(e);
     return null;
