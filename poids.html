@@ -139,7 +139,7 @@
     background:var(--bg-card);border:none;box-shadow:0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);border-radius:var(--radius);
     padding:18px 20px;margin-bottom:12px;
   }
-  .entry-top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+  .entry-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;text-align:left;}
   .entry-date{font-family:var(--display);font-size:18px;letter-spacing:0.3px;}
   .entry-value{font-size:26px;font-weight:800;display:flex;align-items:center;gap:10px;}
   .delta-badge{
@@ -149,7 +149,7 @@
   .delta-badge.down{color:var(--kick-text);border-color:rgba(83,252,24,0.4);}
   .delta-badge.up{color:var(--macdo-red);border-color:rgba(228,87,46,0.4);}
   .delta-badge.flat{color:var(--text-faint);}
-  .entry-actions{display:flex;gap:6px;justify-content:center;}
+  .entry-actions{display:flex;gap:6px;}
   .icon-btn{
     width:30px;height:30px;border-radius:8px;background:var(--bg-elevated);
     border:1px solid var(--border);color:var(--text-dim);font-size:13px;
