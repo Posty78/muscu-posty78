@@ -213,8 +213,11 @@
   .icon-btn:hover{color:var(--text);border-color:var(--text-faint);}
   .icon-btn.danger-hover:hover{color:var(--danger);border-color:var(--danger);}
 
-  .exo-table{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
-  .exo-row{padding:12px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:center;}
+  .exo-table{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:0 20px;}
+  @media (max-width:480px){ .exo-table{grid-template-columns:1fr;} }
+  .exo-row{padding:12px 16px;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:center;}
+  .exo-row:nth-child(odd){border-right:1px solid rgba(255,255,255,0.04);}
+  @media (max-width:480px){ .exo-row:nth-child(odd){border-right:none;} }
   .exo-row:last-child{border-bottom:none;}
   .exo-name{font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;}
   .exo-detail{display:flex;gap:12px;align-items:center;justify-content:center;color:var(--text-dim);font-family:var(--mono);font-size:12px;margin-bottom:8px;}
