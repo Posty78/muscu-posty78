@@ -982,9 +982,9 @@ function renderFoodList(){
       </div>
       ${!f.notFound ? `<div class="food-macros">
         <span><b>${f.calories??'-'}</b> kcal</span>
-        <span><b>${f.protein??'-'}</b>g prot</span>
-        <span><b>${f.carbs??'-'}</b>g gluc</span>
-        <span><b>${f.fat??'-'}</b>g lip</span>
+        <span><b>${f.protein??'-'}</b>g protéines</span>
+        <span><b>${f.carbs??'-'}</b>g glucides</span>
+        <span><b>${f.fat??'-'}</b>g lipides</span>
       </div>` : ''}
       <div class="food-actions">
         ${f.notFound && isAdmin ? `<button class="manual-btn fill-manual" title="Compléter manuellement">✍️ Compléter</button>` : ''}
