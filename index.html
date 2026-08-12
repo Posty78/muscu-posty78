@@ -23,8 +23,8 @@
     --macdo-red: #e4572e;
     --macdo-gold: #f2b705;
     --danger: #ff4d4d;
-    --radius: 14px;
-    --radius-sm: 8px;
+    --radius: 18px;
+    --radius-sm: 12px;
     --display: 'Anton', sans-serif;
     --mono: 'Inter', system-ui, sans-serif;
     --body: 'Inter', system-ui, sans-serif;
@@ -113,7 +113,7 @@
 
   /* ---------- LAYOUT ---------- */
   .wrap{max-width:900px;margin:0 auto;padding:0 20px;}
-  .section{margin-top:40px;}
+  .section{margin-top:56px;}
   .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
   .section-head h2{
     font-family:var(--body);font-weight:800;font-size:19px;letter-spacing:0;margin:0;
@@ -149,7 +149,7 @@
 
   /* ---------- CALENDAR ---------- */
   .calendar{
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    background:var(--bg-card);border:none;box-shadow:0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);border-radius:var(--radius);
     padding:16px;max-width:380px;margin:0 auto;
   }
   .cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -195,8 +195,8 @@
 
   /* ---------- SESSION CARDS ---------- */
   .session-card{
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
-    padding:20px;margin-bottom:14px;
+    background:var(--bg-card);border:none;box-shadow:0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);border-radius:var(--radius);
+    padding:24px;margin-bottom:16px;
   }
   .session-card.rest{border-style:dashed;opacity:0.85;}
   .session-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
@@ -331,7 +331,7 @@
 
   /* ---------- TEMPLATE MANAGER ---------- */
   .template-panel{
-    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    background:var(--bg-card);border:none;box-shadow:0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);border-radius:var(--radius);
     padding:18px;margin-top:16px;
   }
   .template-item{
