@@ -378,27 +378,27 @@
 </nav>
 
 <header class="hero">
-  <div class="hero-eyebrow">🍔 Tour de France des 1500 McDo · Jour <span id="dayCounter">-</span>/365</div>
+  <div class="hero-eyebrow">Tour de France des 1500 McDo · Jour <span id="dayCounter">-</span>/365</div>
   <h1>SURVIVRE AU<br>RÉGIME MACDO</h1>
   <div class="hero-stats">
-    <div class="stat-pill">💪 <b id="statTotalSessions">0</b> séances enregistrées</div>
-    <div class="stat-pill">📦 <b id="statVolume">0</b> kg soulevés au total</div>
+    <div class="stat-pill"><b id="statTotalSessions">0</b> séances enregistrées</div>
+    <div class="stat-pill"><b id="statVolume">0</b> kg soulevés au total</div>
   </div>
 </header>
 
 <div class="wrap">
 
   <div id="adminBar" class="admin-bar" style="display:none;">
-    <span class="admin-tag">🔓 MODE ADMIN ACTIF</span>
+    <span class="admin-tag">MODE ADMIN</span>
     <button class="btn small" id="btnNewSession">+ Nouvelle séance</button>
-    <button class="btn secondary small" id="btnRestDay">😴 Jour de repos</button>
-    <button class="btn secondary small" id="btnManageTemplate">⚙️ Gérer les exercices</button>
+    <button class="btn secondary small" id="btnRestDay">Jour de repos</button>
+    <button class="btn secondary small" id="btnManageTemplate">Gérer les exercices</button>
     <button class="btn ghost small" id="btnLogout" style="margin-left:auto;">Déconnexion</button>
   </div>
 
   <section class="section">
     <div class="section-head">
-      <h2>📅 Historique</h2>
+      <h2>Historique</h2>
       <span class="sub" id="calRange">-</span>
     </div>
     <div class="calendar">
@@ -500,7 +500,7 @@
       <button class="btn ghost" id="btnCancelSession">Annuler</button>
       <div style="display:flex;gap:10px;">
         <button class="btn danger" id="btnDeleteSession" style="display:none;">Supprimer cette séance</button>
-        <button class="btn" id="btnSaveSession">💾 Enregistrer</button>
+        <button class="btn" id="btnSaveSession">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -813,8 +813,8 @@ function renderSessionCard(s){
     <div class="session-card rest" data-session-id="${s.id}">
       <div class="session-top">
         <div>
-          <div class="session-date">😴 Jour de repos</div>
-          <div class="session-meta"><span>📅 ${fmtDate(s.date)}</span>${s.place?`<span>📍 ${s.place}</span>`:''}</div>
+          <div class="session-date">Jour de repos</div>
+          <div class="session-meta"><span>${fmtDate(s.date)}</span>${s.place?`<span>${s.place}</span>`:''}</div>
         </div>
         ${isAdmin ? `<div class="session-actions">
           <button class="icon-btn edit-btn" title="Modifier">✎</button>
@@ -847,10 +847,10 @@ function renderSessionCard(s){
   <div class="session-card" data-session-id="${s.id}">
     <div class="session-top">
       <div>
-        <div class="session-date">📅 ${fmtDate(s.date)}</div>
+        <div class="session-date">${fmtDate(s.date)}</div>
         <div class="session-meta">
-          ${s.place ? `<span>📍 ${s.place}</span>` : ''}
-          ${durMin ? `<span>⏱ ${durMin} min</span>` : ''}
+          ${s.place ? `<span>${s.place}</span>` : ''}
+          ${durMin ? `<span>${durMin} min</span>` : ''}
           ${s.feeling ? `<span class="feeling-badge">${s.feeling}</span>` : ''}
         </div>
       </div>
@@ -860,7 +860,7 @@ function renderSessionCard(s){
       </div>` : ''}
     </div>
     <div class="exo-table">${exoRows}</div>
-    ${s.volumeTotal ? `<div class="session-volume">📦 Volume total : ${Math.round(s.volumeTotal).toLocaleString('fr-FR')} kg déplacés</div>` : ''}
+    ${s.volumeTotal ? `<div class="session-volume">Volume total : ${Math.round(s.volumeTotal).toLocaleString('fr-FR')} kg déplacés</div>` : ''}
     ${s.note ? `<div class="session-note">"${escapeHtml(s.note)}"</div>` : ''}
   </div>`;
 }
@@ -1095,7 +1095,7 @@ function bindExoFormEvents(){
 }
 
 $("btnAddExoInline").addEventListener("click", ()=>{
-  if (!template.length){ showToast("Ajoute d'abord des exercices au template (⚙️ Gérer les exercices)."); return; }
+  if (!template.length){ showToast("Ajoute d'abord des exercices au template (Gérer les exercices)."); return; }
   const picker = $("exoPickerList");
   const isOpen = picker.style.display !== "none";
   if (isOpen){ picker.style.display = "none"; return; }

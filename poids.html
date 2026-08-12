@@ -164,16 +164,6 @@
   .measure-item .val{font-size:18px;font-weight:800;}
   .measure-item .lbl{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;}
 
-  .reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
-  .react-btn{
-    background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;
-    padding:5px 10px;font-size:14px;display:flex;align-items:center;gap:5px;
-    color:var(--text-dim);transition:transform .1s ease;
-  }
-  .react-btn .count{font-size:11px;}
-  .react-btn:hover{border-color:var(--kick-dim);transform:translateY(-1px);}
-  .react-btn.reacted{border-color:var(--kick);background:rgba(83,252,24,0.1);color:var(--text);}
-
   /* ---------- MODAL ---------- */
   .modal-overlay{
     position:fixed;inset:0;background:rgba(6,7,8,0.75);backdrop-filter:blur(4px);
@@ -244,7 +234,7 @@
 <div class="wrap">
 
   <div id="adminBar" class="admin-bar" style="display:none;">
-    <span class="admin-tag">🔓 MODE ADMIN ACTIF</span>
+    <span class="admin-tag">MODE ADMIN</span>
     <button class="btn small" id="btnNewWeight">+ Nouvelle pesée</button>
     <button class="btn secondary small" id="btnNewMeasure">📏 Nouveau contrôle mensurations</button>
     <button class="btn ghost small" id="btnLogout" style="margin-left:auto;">Déconnexion</button>
@@ -313,7 +303,7 @@
       <button class="btn ghost" id="btnCancelWeight">Annuler</button>
       <div style="display:flex;gap:10px;">
         <button class="btn danger" id="btnDeleteWeight" style="display:none;">Supprimer</button>
-        <button class="btn" id="btnSaveWeight">💾 Enregistrer</button>
+        <button class="btn" id="btnSaveWeight">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -352,7 +342,7 @@
       <button class="btn ghost" id="btnCancelMeasure">Annuler</button>
       <div style="display:flex;gap:10px;">
         <button class="btn danger" id="btnDeleteMeasure" style="display:none;">Supprimer</button>
-        <button class="btn" id="btnSaveMeasure">💾 Enregistrer</button>
+        <button class="btn" id="btnSaveMeasure">Enregistrer</button>
       </div>
     </div>
   </div>
@@ -385,7 +375,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   getFirestore, collection, doc, addDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, increment, serverTimestamp
+  onSnapshot, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -413,7 +403,6 @@ let isAdmin = false;
 let editingWeightId = null;
 let editingMeasureId = null;
 
-const REACTIONS = ["💪","🔥","😤","👏","🚀","🥵","💀","🦍","👊","🥇"];
 
 const $ = (id) => document.getElementById(id);
 const todayISO = () => new Date().toISOString().slice(0,10);
@@ -428,7 +417,6 @@ function showToast(msg){
   const t = $("toast"); t.textContent = msg; t.style.display = "block";
   clearTimeout(showToast._t); showToast._t = setTimeout(()=> t.style.display="none", 2600);
 }
-function localReactionKey(col, id, emoji){ return `muscu_react_${col}_${id}_${emoji}`; }
 
 /* ---------------- AUTH ---------------- */
 onAuthStateChanged(auth, (user) => {
@@ -573,12 +561,6 @@ function renderWeightList(){
   });
 
   $("weightList").innerHTML = withDelta.map(w => {
-    const reactions = w.reactions || {};
-    const reactHtml = REACTIONS.map(e=>{
-      const count = reactions[e] || 0;
-      const reacted = localStorage.getItem(localReactionKey('w', w.id, e)) === "1";
-      return `<button class="react-btn ${reacted?'reacted':''}" data-emoji="${e}">${e}<span class="count">${count>0?count:''}</span></button>`;
-    }).join("");
     let deltaHtml = "";
     if (w.delta !== null){
       const cls = w.delta > 0 ? "up" : w.delta < 0 ? "down" : "flat";
@@ -589,7 +571,7 @@ function renderWeightList(){
     <div class="entry-card" data-id="${w.id}">
       <div class="entry-top">
         <div>
-          <div class="entry-date">📅 ${fmtDate(w.date)}</div>
+          <div class="entry-date">${fmtDate(w.date)}</div>
           <div class="entry-value">${w.weight.toFixed(1)} kg ${deltaHtml}</div>
         </div>
         ${isAdmin ? `<div class="entry-actions">
@@ -598,14 +580,12 @@ function renderWeightList(){
         </div>` : ''}
       </div>
       ${w.note ? `<div class="entry-note">"${escapeHtml(w.note)}"</div>` : ''}
-      <div class="reactions">${reactHtml}</div>
     </div>`;
   }).join("");
 
   withDelta.forEach(w=>{
     const card = document.querySelector(`.entry-card[data-id="${w.id}"]`);
     if (!card) return;
-    card.querySelectorAll(".react-btn").forEach(btn=> btn.addEventListener("click", ()=> handleReact(WEIGHTS_COL, 'w', w.id, btn.dataset.emoji)));
     const editBtn = card.querySelector(".edit-w");
     if (editBtn) editBtn.addEventListener("click", ()=> openWeightModal(w));
     const delBtn = card.querySelector(".delete-w");
@@ -613,15 +593,6 @@ function renderWeightList(){
   });
 }
 
-async function handleReact(colName, prefix, id, emoji){
-  const key = localReactionKey(prefix, id, emoji);
-  const already = localStorage.getItem(key) === "1";
-  const ref = doc(db, colName, id);
-  try{
-    await updateDoc(ref, { [`reactions.${emoji}`]: increment(already ? -1 : 1) });
-    if (already) localStorage.removeItem(key); else localStorage.setItem(key, "1");
-  }catch(e){ console.error(e); }
-}
 
 async function confirmDeleteWeight(id, date){
   if (!confirm(`Supprimer la pesée du ${fmtDate(date)} ?`)) return;
@@ -636,12 +607,6 @@ function renderMeasureList(){
     return;
   }
   $("measureList").innerHTML = measures.map(m=>{
-    const reactions = m.reactions || {};
-    const reactHtml = REACTIONS.map(e=>{
-      const count = reactions[e] || 0;
-      const reacted = localStorage.getItem(localReactionKey('m', m.id, e)) === "1";
-      return `<button class="react-btn ${reacted?'reacted':''}" data-emoji="${e}">${e}<span class="count">${count>0?count:''}</span></button>`;
-    }).join("");
     const items = [
       m.arm != null ? {v:m.arm, l:"Bras"} : null,
       m.chest != null ? {v:m.chest, l:"Poitrine"} : null,
@@ -651,7 +616,7 @@ function renderMeasureList(){
     return `
     <div class="entry-card" data-id="${m.id}">
       <div class="entry-top">
-        <div class="entry-date">📅 ${fmtDate(m.date)}</div>
+        <div class="entry-date">${fmtDate(m.date)}</div>
         ${isAdmin ? `<div class="entry-actions">
           <button class="icon-btn edit-m" title="Modifier">✎</button>
           <button class="icon-btn danger-hover delete-m" title="Supprimer">🗑</button>
@@ -660,14 +625,12 @@ function renderMeasureList(){
       <div class="measure-grid">
         ${items.map(it=>`<div class="measure-item"><div class="val">${it.v} cm</div><div class="lbl">${it.l}</div></div>`).join("")}
       </div>
-      <div class="reactions">${reactHtml}</div>
     </div>`;
   }).join("");
 
   measures.forEach(m=>{
     const card = document.querySelector(`.entry-card[data-id="${m.id}"]`);
     if (!card) return;
-    card.querySelectorAll(".react-btn").forEach(btn=> btn.addEventListener("click", ()=> handleReact(MEASURES_COL, 'm', m.id, btn.dataset.emoji)));
     const editBtn = card.querySelector(".edit-m");
     if (editBtn) editBtn.addEventListener("click", ()=> openMeasureModal(m));
     const delBtn = card.querySelector(".delete-m");
@@ -707,7 +670,6 @@ $("btnSaveWeight").addEventListener("click", async ()=>{
       await updateDoc(doc(db, WEIGHTS_COL, editingWeightId), payload);
       showToast("Pesée mise à jour ✅");
     } else {
-      payload.reactions = {};
       payload.createdAt = serverTimestamp();
       payload.createdAtMs = Date.now();
       await addDoc(collection(db, WEIGHTS_COL), payload);
@@ -760,7 +722,6 @@ $("btnSaveMeasure").addEventListener("click", async ()=>{
       await updateDoc(doc(db, MEASURES_COL, editingMeasureId), payload);
       showToast("Contrôle mis à jour ✅");
     } else {
-      payload.reactions = {};
       payload.createdAt = serverTimestamp();
       await addDoc(collection(db, MEASURES_COL), payload);
       showToast("Contrôle enregistré ✅");
