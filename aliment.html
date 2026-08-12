@@ -51,7 +51,7 @@
 
   .wrap{max-width:640px;margin:0 auto;padding:0 20px;}
   .section{margin-top:40px;}
-  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .section-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin-bottom:16px;}
   .section-head h2{font-family:var(--body);font-weight:800;font-size:19px;letter-spacing:0;margin:0;}
   .section-head .sub{color:var(--text-faint);font-size:12px;}
 
@@ -62,7 +62,7 @@
   .btn.danger{background:var(--danger);color:#2a0505;}
   .btn.small{padding:8px 14px;font-size:12px;}
 
-  .admin-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);align-items:center;}
+  .admin-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);align-items:center;justify-content:center;}
   .admin-tag{font-size:11px;color:var(--kick-text);display:flex;align-items:center;gap:6px;font-weight:800;}
 
   .input, select{background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;}
@@ -202,7 +202,7 @@
   <div id="adminBar" class="admin-bar" style="display:none;">
     <span class="admin-tag">MODE ADMIN</span>
     <button class="btn secondary small" id="btnSettings">Régler mes besoins</button>
-    <button class="btn ghost small" id="btnLogout" style="margin-left:auto;">Déconnexion</button>
+    <button class="btn ghost small" id="btnLogout">Déconnexion</button>
   </div>
 
   <div class="day-switcher">

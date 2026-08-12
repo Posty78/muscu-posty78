@@ -114,7 +114,7 @@
   /* ---------- LAYOUT ---------- */
   .wrap{max-width:640px;margin:0 auto;padding:0 20px;}
   .section{margin-top:56px;}
-  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+  .section-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px;margin-bottom:16px;}
   .section-head h2{
     font-family:var(--body);font-weight:800;font-size:19px;letter-spacing:0;margin:0;
   }
@@ -138,7 +138,7 @@
   .btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
 
   .admin-bar{
-    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;
+    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;justify-content:center;
     padding:14px 16px;border:none;border-radius:var(--radius-sm);
     background:var(--bg-card);box-shadow:0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.03);
   }
@@ -186,7 +186,7 @@
   .cal-legend .lg-dot.rest{background:rgba(242,183,5,0.6);border:1px solid var(--macdo-gold);}
 
   /* ---------- FILTER ---------- */
-  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center;}
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;align-items:center;justify-content:center;}
   select, .input{
     background:var(--bg-card);border:1px solid var(--border);color:var(--text);
     border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;
@@ -199,12 +199,12 @@
     padding:24px;margin-bottom:16px;
   }
   .session-card.rest{border-style:dashed;opacity:0.85;}
-  .session-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .session-top{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
   .session-date{font-family:var(--display);font-size:20px;letter-spacing:0.3px;}
-  .session-meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--text-dim);font-size:12px;font-family:var(--mono);margin-top:4px;}
+  .session-meta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;color:var(--text-dim);font-size:12px;font-family:var(--mono);margin-top:4px;}
   .session-meta span{display:flex;align-items:center;gap:4px;}
   .feeling-badge{font-size:20px;}
-  .session-actions{display:flex;gap:6px;}
+  .session-actions{display:flex;gap:6px;justify-content:center;}
   .icon-btn{
     width:30px;height:30px;border-radius:8px;background:var(--bg-elevated);
     border:1px solid var(--border);color:var(--text-dim);font-size:13px;
@@ -214,13 +214,13 @@
   .icon-btn.danger-hover:hover{color:var(--danger);border-color:var(--danger);}
 
   .exo-table{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
-  .exo-row{padding:12px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .exo-row{padding:12px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:center;}
   .exo-row:last-child{border-bottom:none;}
-  .exo-name{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-  .exo-detail{display:flex;gap:12px;align-items:center;color:var(--text-dim);font-family:var(--mono);font-size:12px;margin-bottom:8px;}
+  .exo-name{font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;}
+  .exo-detail{display:flex;gap:12px;align-items:center;justify-content:center;color:var(--text-dim);font-family:var(--mono);font-size:12px;margin-bottom:8px;}
   .exo-weight{font-weight:700;color:var(--text);}
   .exo-series-count{color:var(--text-faint);}
-  .exo-series{display:flex;gap:6px;flex-wrap:wrap;}
+  .exo-series{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
   .serie-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text-dim);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2;}
   .serie-chip b{font-size:14px;font-weight:800;color:var(--text);}
   .serie-num{font-size:9px;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-faint);}
@@ -230,7 +230,7 @@
   }
 
   .session-note{margin-top:12px;font-size:13px;color:var(--text-dim);font-style:italic;padding:10px 12px;background:var(--bg-elevated);border-radius:var(--radius-sm);}
-  .session-volume{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--kick-text);font-weight:700;display:flex;align-items:center;gap:6px;}
+  .session-volume{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--kick-text);font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;}
 
   .empty-state{
     text-align:center;padding:40px 20px;color:var(--text-faint);
@@ -393,7 +393,7 @@
     <button class="btn small" id="btnNewSession">+ Nouvelle séance</button>
     <button class="btn secondary small" id="btnRestDay">Jour de repos</button>
     <button class="btn secondary small" id="btnManageTemplate">Gérer les exercices</button>
-    <button class="btn ghost small" id="btnLogout" style="margin-left:auto;">Déconnexion</button>
+    <button class="btn ghost small" id="btnLogout">Déconnexion</button>
   </div>
 
   <section class="section">
