@@ -13,7 +13,8 @@
   :root{
     --bg: #0c0d0f; --bg-elevated: #16181c; --bg-card: #1c1f24; --border: #2a2e35;
     --text: #f2f3f5; --text-dim: #9195a0; --text-faint: #5a5e68;
-    --kick: #53fc18; --kick-dim: #3ac710; --macdo-red: #e4572e; --macdo-gold: #f2b705;
+    --kick: #53fc18; --kick-dim: #3ac710;
+    --kick-text: #8dff5c; --macdo-red: #e4572e; --macdo-gold: #f2b705;
     --danger: #ff4d4d; --radius: 18px; --radius-sm: 12px;
     --display: 'Anton', sans-serif; --mono: 'Inter', system-ui, sans-serif; --body: 'Inter', system-ui, sans-serif;
   }
@@ -62,7 +63,7 @@
   .btn.small{padding:8px 14px;font-size:12px;}
 
   .admin-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);align-items:center;}
-  .admin-tag{font-size:11px;color:var(--kick);display:flex;align-items:center;gap:6px;font-weight:700;}
+  .admin-tag{font-size:11px;color:var(--kick-text);display:flex;align-items:center;gap:6px;font-weight:800;}
 
   .input, select{background:var(--bg-card);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;}
   .input:focus, select:focus{outline:none;border-color:var(--kick-dim);}
@@ -115,7 +116,7 @@
   .week-bar-fill.bad{background:var(--macdo-red);}
   .week-bar-fill.empty{background:var(--text-faint);opacity:0.3;}
   .week-bar-label{font-size:10px;color:var(--text-faint);font-weight:700;text-transform:uppercase;}
-  .week-bar-today{color:var(--kick);}
+  .week-bar-today{color:var(--kick-text);font-weight:700;}
   .week-bar-pct{font-size:9px;color:var(--text-faint);}
 
   /* food list */

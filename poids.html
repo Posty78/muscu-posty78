@@ -20,6 +20,7 @@
     --text-faint: #5a5e68;
     --kick: #53fc18;
     --kick-dim: #3ac710;
+    --kick-text: #8dff5c;
     --macdo-red: #e4572e;
     --macdo-gold: #f2b705;
     --danger: #ff4d4d;
@@ -88,7 +89,7 @@
   }
   .stat-pill b{color:var(--text);font-size:15px;}
   .stat-pill.up b{color:var(--macdo-red);}
-  .stat-pill.down b{color:var(--kick);}
+  .stat-pill.down b{color:var(--kick-text);}
 
   /* ---------- LAYOUT ---------- */
   .wrap{max-width:640px;margin:0 auto;padding:0 20px;}
@@ -113,7 +114,7 @@
     display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding:12px;
     border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg-card);
   }
-  .admin-tag{font-size:11px;color:var(--kick);display:flex;align-items:center;gap:6px;font-weight:700;}
+  .admin-tag{font-size:11px;color:var(--kick-text);display:flex;align-items:center;gap:6px;font-weight:800;}
 
   .input, select{
     background:var(--bg-card);border:1px solid var(--border);color:var(--text);
@@ -146,7 +147,7 @@
     font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;
     background:var(--bg-elevated);border:1px solid var(--border);
   }
-  .delta-badge.down{color:var(--kick);border-color:rgba(83,252,24,0.4);}
+  .delta-badge.down{color:var(--kick-text);border-color:rgba(83,252,24,0.4);}
   .delta-badge.up{color:var(--macdo-red);border-color:rgba(228,87,46,0.4);}
   .delta-badge.flat{color:var(--text-faint);}
   .entry-actions{display:flex;gap:6px;}
