@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Survivre au Régime Macdo — Posty78</title>
+<title>Survivre au Régime Macdo - Posty78</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Suivi d'entraînement en direct pendant le Tour de France des 1500 McDo — Posty78">
+<meta name="description" content="Suivi d'entraînement en direct pendant le Tour de France des 1500 McDo - Posty78">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -215,30 +215,23 @@
   .icon-btn.danger-hover:hover{color:var(--danger);border-color:var(--danger);}
 
   .exo-table{margin-top:14px;border-top:1px solid var(--border);padding-top:12px;}
-  .exo-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);gap:10px;flex-wrap:wrap;}
+  .exo-row{padding:12px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);}
   .exo-row:last-child{border-bottom:none;}
-  .exo-name{font-weight:700;display:flex;align-items:center;gap:8px;}
+  .exo-name{font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .exo-detail{display:flex;gap:12px;align-items:center;color:var(--text-dim);font-family:var(--mono);font-size:12px;margin-bottom:8px;}
+  .exo-weight{font-weight:700;color:var(--text);}
+  .exo-series-count{color:var(--text-faint);}
+  .exo-series{display:flex;gap:6px;flex-wrap:wrap;}
+  .serie-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;color:var(--text-dim);display:flex;flex-direction:column;align-items:center;gap:1px;line-height:1.2;}
+  .serie-chip b{font-size:14px;font-weight:800;color:var(--text);}
+  .serie-num{font-size:9px;text-transform:uppercase;letter-spacing:0.3px;color:var(--text-faint);}
   .exo-group-tag{
     font-size:9px;font-family:var(--mono);color:var(--text-faint);
     border:1px solid var(--border);border-radius:5px;padding:2px 6px;text-transform:uppercase;
   }
-  .exo-detail{color:var(--text-dim);font-family:var(--mono);font-size:12px;text-align:right;}
-  .exo-series{display:flex;gap:0;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
-  .serie-chip{background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:12px;font-weight:700;color:var(--text);}
-  .serie-x{color:var(--text-faint);font-size:11px;margin:0 4px;font-weight:700;}
 
   .session-note{margin-top:12px;font-size:13px;color:var(--text-dim);font-style:italic;padding:10px 12px;background:var(--bg-elevated);border-radius:var(--radius-sm);}
   .session-volume{margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--kick);display:flex;align-items:center;gap:6px;}
-
-  .reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
-  .react-btn{
-    background:var(--bg-elevated);border:1px solid var(--border);border-radius:999px;
-    padding:5px 10px;font-size:14px;display:flex;align-items:center;gap:5px;
-    color:var(--text-dim);transition:transform .1s ease;
-  }
-  .react-btn .count{font-family:var(--mono);font-size:11px;}
-  .react-btn:hover{border-color:var(--kick-dim);transform:translateY(-1px);}
-  .react-btn.reacted{border-color:var(--kick);background:rgba(83,252,24,0.1);color:var(--text);}
 
   .empty-state{
     text-align:center;padding:40px 20px;color:var(--text-faint);
@@ -282,19 +275,33 @@
   .exo-form-title{font-weight:800;font-size:15px;display:flex;align-items:center;gap:8px;}
   .exo-form-actions{display:flex;gap:6px;}
   .bw-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);}
-  .series-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center;}
+  .field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:var(--text-faint);margin-bottom:6px;display:block;}
+  .weight-field{margin-top:12px;}
+  .weight-field .serie-input{width:90px;}
+  .weight-unit{margin-left:8px;color:var(--text-dim);font-size:13px;}
+  .series-list{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+  .serie-row{
+    display:flex;align-items:center;gap:10px;
+    background:var(--bg-elevated);border:1px solid var(--border);border-radius:9px;
+    padding:8px 10px;
+  }
+  .serie-row-label{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--text-faint);min-width:58px;}
+  .serie-row-input-wrap{display:flex;align-items:center;gap:8px;flex:1;}
   .serie-input{
-    width:52px;background:var(--bg-elevated);border:1px solid var(--border);color:var(--text);
-    border-radius:7px;padding:6px 4px;text-align:center;font-family:var(--mono);font-size:13px;
+    width:64px;background:var(--bg-card);border:1px solid var(--border);color:var(--text);
+    border-radius:7px;padding:8px 6px;text-align:center;font-family:var(--mono);font-size:15px;font-weight:700;
   }
+  .serie-unit{font-size:12px;color:var(--text-dim);}
   .serie-remove{
-    width:20px;height:20px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border);
-    color:var(--text-faint);font-size:11px;display:flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);
+    color:var(--text-faint);font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
+  .serie-remove:hover{color:var(--danger);border-color:var(--danger);}
   .add-serie-btn{
-    background:transparent;border:1px dashed var(--text-faint);color:var(--text-dim);
-    border-radius:7px;padding:6px 10px;font-size:12px;
+    width:100%;background:transparent;border:1px dashed var(--kick-dim);color:var(--kick);
+    border-radius:9px;padding:10px;font-size:13px;font-weight:700;margin-top:4px;
   }
+  .add-serie-btn:hover{background:rgba(83,252,24,0.06);}
   .exo-picker-list{
     margin-top:10px;padding:10px;background:var(--bg-card);border:1px solid var(--border);
     border-radius:var(--radius-sm);display:flex;flex-wrap:wrap;gap:8px;
@@ -372,7 +379,7 @@
 </nav>
 
 <header class="hero">
-  <div class="hero-eyebrow">🍔 Tour de France des 1500 McDo · Jour <span id="dayCounter">—</span>/365</div>
+  <div class="hero-eyebrow">🍔 Tour de France des 1500 McDo · Jour <span id="dayCounter">-</span>/365</div>
   <h1>SURVIVRE AU<br>RÉGIME MACDO</h1>
   <div class="hero-stats">
     <div class="stat-pill">💪 <b id="statTotalSessions">0</b> séances enregistrées</div>
@@ -393,12 +400,12 @@
   <section class="section">
     <div class="section-head">
       <h2>📅 Historique</h2>
-      <span class="sub" id="calRange">—</span>
+      <span class="sub" id="calRange">-</span>
     </div>
     <div class="calendar">
       <div class="cal-head">
         <div class="cal-nav"><button id="calPrev">‹</button></div>
-        <div class="month" id="calMonthLabel">—</div>
+        <div class="month" id="calMonthLabel">-</div>
         <div class="cal-nav"><button id="calNext">›</button></div>
       </div>
       <div class="cal-grid" id="calGrid"></div>
@@ -431,6 +438,8 @@
       <a href="https://www.tiktok.com/@kick.posty78" target="_blank" rel="noopener">🎵 TikTok</a>
       <a href="https://www.youtube.com/@Posty78VOD" target="_blank" rel="noopener">▶️ YouTube</a>
       <a href="https://x.com/Posty_78" target="_blank" rel="noopener">✖️ X</a>
+      <a href="https://www.snapchat.com/@kick.posty78" target="_blank" rel="noopener">👻 Snapchat</a>
+      <a href="https://www.facebook.com/profile.php?id=61592541909664&locale=fr_FR" target="_blank" rel="noopener">📘 Facebook</a>
       <a href="https://maps.posty78.fr" target="_blank" rel="noopener">🗺️ Maps</a>
       <a href="https://recompense.posty78.fr" target="_blank" rel="noopener">🎟️ Récompense</a>
       <a href="https://giveaway.posty78.fr" target="_blank" rel="noopener">🎁 Giveaway</a>
@@ -438,7 +447,7 @@
       <a href="https://basic.posty78.fr" target="_blank" rel="noopener">🏋️ Basic Fit</a>
       <a href="mailto:contact@posty78.fr">✉️ Contact</a>
     </div>
-    <div class="footer-copy">muscu.posty78.fr — Posty78</div>
+    <div class="footer-copy">muscu.posty78.fr - Posty78</div>
   </footer>
 </div>
 
@@ -446,7 +455,7 @@
 <div class="modal-overlay" id="sessionModal">
   <div class="modal">
     <h3 id="modalTitle">Nouvelle séance</h3>
-    <div class="modal-sub" id="modalSub">—</div>
+    <div class="modal-sub" id="modalSub">-</div>
 
     <div class="field-row">
       <div class="field">
@@ -562,14 +571,14 @@
 
 <script type="module">
 /* ======================================================================
-   FIREBASE CONFIG — À REMPLACER avec la config de ton projet existant
+   FIREBASE CONFIG - À REMPLACER avec la config de ton projet existant
    (même projet que maps/giveaway/barbecue). Console Firebase > Paramètres
    du projet > Vos applications > SDK setup and configuration.
    ====================================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy, increment, serverTimestamp, setDoc
+  onSnapshot, query, orderBy, serverTimestamp, setDoc
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -604,7 +613,7 @@ let calViewDate = new Date();
 let selectedCalDay = null;
 
 const FEELINGS = ["😫","😓","😐","💪","🔥"];
-const REACTIONS = ["💪","🔥","😤","👏","🚀","🥵","💀","🦍","👊","🥇"];
+
 
 /* ---------------- HELPERS ---------------- */
 const $ = (id) => document.getElementById(id);
@@ -623,7 +632,7 @@ function showToast(msg){
   showToast._t = setTimeout(()=> t.style.display="none", 2600);
 }
 
-function localReactionKey(sessionId, emoji){ return `muscu_react_${sessionId}_${emoji}`; }
+
 
 /* ---------------- DAY COUNTER ---------------- */
 function updateDayCounter(){
@@ -792,9 +801,6 @@ function renderSessions(){
   list.forEach(s => {
     const card = document.querySelector(`[data-session-id="${s.id}"]`);
     if (!card) return;
-    card.querySelectorAll(".react-btn").forEach(btn=>{
-      btn.addEventListener("click", ()=> handleReact(s.id, btn.dataset.emoji));
-    });
     const editBtn = card.querySelector(".edit-btn");
     if (editBtn) editBtn.addEventListener("click", ()=> openSessionModal(s));
     const delBtn = card.querySelector(".delete-btn");
@@ -803,13 +809,6 @@ function renderSessions(){
 }
 
 function renderSessionCard(s){
-  const reactions = s.reactions || {};
-  const reactHtml = REACTIONS.map(e=>{
-    const count = reactions[e] || 0;
-    const reacted = localStorage.getItem(localReactionKey(s.id, e)) === "1";
-    return `<button class="react-btn ${reacted?'reacted':''}" data-emoji="${e}">${e}<span class="count">${count>0?count:''}</span></button>`;
-  }).join("");
-
   if (s.isRestDay){
     return `
     <div class="session-card rest" data-session-id="${s.id}">
@@ -824,19 +823,24 @@ function renderSessionCard(s){
         </div>` : ''}
       </div>
       ${s.note ? `<div class="session-note">"${escapeHtml(s.note)}"</div>` : ''}
-      <div class="reactions">${reactHtml}</div>
     </div>`;
   }
 
-  const exoRows = (s.exercises||[]).map(e => `
+  const exoRows = (s.exercises||[]).map(e => {
+    const series = e.series || [];
+    const nbSeries = series.length;
+    const seriesLabel = nbSeries === 1 ? "1 série" : `${nbSeries} séries`;
+    const seriesChips = series.map((r,i)=> `<span class="serie-chip"><b>${r}</b> reps<span class="serie-num">série ${i+1}</span></span>`).join('');
+    return `
     <div class="exo-row">
       <div class="exo-name">${escapeHtml(e.name)} <span class="exo-group-tag">${e.group||''}</span></div>
       <div class="exo-detail">
-        ${e.bodyweight ? '<span>poids du corps</span>' : `<span>${e.weight}kg</span>`}
-        <div class="exo-series">${(e.series||[]).map((r,i)=> (i>0?'<span class="serie-x">×</span>':'') + `<span class="serie-chip">${r}</span>`).join('')}</div>
+        <span class="exo-weight">${e.bodyweight ? 'Poids du corps' : `${e.weight} kg`}</span>
+        <span class="exo-series-count">${seriesLabel}</span>
       </div>
-    </div>
-  `).join("");
+      <div class="exo-series">${seriesChips}</div>
+    </div>`;
+  }).join("");
 
   const durMin = s.durationSeconds ? Math.round(s.durationSeconds/60) : null;
 
@@ -859,7 +863,6 @@ function renderSessionCard(s){
     <div class="exo-table">${exoRows}</div>
     ${s.volumeTotal ? `<div class="session-volume">📦 Volume total : ${Math.round(s.volumeTotal).toLocaleString('fr-FR')} kg déplacés</div>` : ''}
     ${s.note ? `<div class="session-note">"${escapeHtml(s.note)}"</div>` : ''}
-    <div class="reactions">${reactHtml}</div>
   </div>`;
 }
 
@@ -867,17 +870,6 @@ function escapeHtml(str){
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
-}
-
-async function handleReact(sessionId, emoji){
-  const key = localReactionKey(sessionId, emoji);
-  const already = localStorage.getItem(key) === "1";
-  const ref = doc(db, SESSIONS_COL, sessionId);
-  const field = `reactions.${emoji}`;
-  try{
-    await updateDoc(ref, { [field]: increment(already ? -1 : 1) });
-    if (already) localStorage.removeItem(key); else localStorage.setItem(key, "1");
-  }catch(e){ console.error(e); }
 }
 
 async function confirmDeleteSession(id, date){
@@ -1028,16 +1020,26 @@ function renderExoFormList(){
         </div>
       </div>
       <label class="bw-check">
-        <input type="checkbox" data-bw="${e.tempId}" ${e.bodyweight?'checked':''}> Poids du corps
+        <input type="checkbox" data-bw="${e.tempId}" ${e.bodyweight?'checked':''}> Cet exercice se fait au poids du corps (pas de charge)
       </label>
-      <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap;">
-        <div style="${e.bodyweight?'display:none':''}" data-weight-wrap="${e.tempId}">
-          <input type="number" step="0.5" class="serie-input" style="width:70px;" data-weight="${e.tempId}" value="${e.weight||0}"> kg
-        </div>
+      <div class="weight-field" style="${e.bodyweight?'display:none':''}" data-weight-wrap="${e.tempId}">
+        <span class="field-label">Poids soulevé</span>
+        <input type="number" step="0.5" class="serie-input" data-weight="${e.tempId}" value="${e.weight||0}"><span class="weight-unit">kg - même poids pour toutes les séries ci-dessous</span>
+      </div>
+      <div style="margin-top:14px;">
+        <span class="field-label">Séries effectuées - combien de répétitions à chaque série</span>
         <div class="series-list" data-series="${e.tempId}">
-          ${(e.series||[]).map((r,i)=>`${i>0?'<span class="serie-x">×</span>':''}<input type="number" class="serie-input" data-serie-idx="${i}" data-serie-for="${e.tempId}" value="${r}"><button class="serie-remove" data-serie-remove="${e.tempId}" data-idx="${i}">×</button>`).join("")}
-          <button class="add-serie-btn" data-add-serie="${e.tempId}">+ série</button>
+          ${(e.series||[]).map((r,i)=>`
+            <div class="serie-row">
+              <span class="serie-row-label">Série ${i+1}</span>
+              <div class="serie-row-input-wrap">
+                <input type="number" class="serie-input" data-serie-idx="${i}" data-serie-for="${e.tempId}" value="${r}">
+                <span class="serie-unit">répétitions</span>
+              </div>
+              <button class="serie-remove" data-serie-remove="${e.tempId}" data-idx="${i}" title="Supprimer cette série">✕</button>
+            </div>`).join("")}
         </div>
+        <button class="add-serie-btn" data-add-serie="${e.tempId}">+ Ajouter une série</button>
       </div>
     </div>
   `).join("") || `<div class="empty-state">Aucun exercice. Ajoute-en un ci-dessous.</div>`;
@@ -1164,7 +1166,6 @@ $("btnSaveSession").addEventListener("click", async ()=>{
       await updateDoc(doc(db, SESSIONS_COL, editingSessionId), payload);
       showToast("Séance mise à jour ✅");
     } else {
-      payload.reactions = {};
       payload.createdAt = serverTimestamp();
       await addDoc(collection(db, SESSIONS_COL), payload);
       showToast("Séance enregistrée ✅");
@@ -1172,7 +1173,7 @@ $("btnSaveSession").addEventListener("click", async ()=>{
     closeSessionModal();
   }catch(e){
     console.error(e);
-    showToast("Erreur d'enregistrement — vérifie ta connexion.");
+    showToast("Erreur d'enregistrement - vérifie ta connexion.");
   }
 });
 
@@ -1189,7 +1190,7 @@ $("btnRestDay").addEventListener("click", async ()=>{
   const note = prompt("Note pour ce jour de repos (optionnel) :", "");
   if (note === null) return;
   await addDoc(collection(db, SESSIONS_COL), {
-    date: todayISO(), isRestDay: true, note: note.trim(), place:"", reactions:{}, createdAt: serverTimestamp()
+    date: todayISO(), isRestDay: true, note: note.trim(), place:"", createdAt: serverTimestamp()
   });
   showToast("Jour de repos ajouté 😴");
 });

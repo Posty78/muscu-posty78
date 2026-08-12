@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poids & Mensurations — Posty78</title>
-<meta name="description" content="Suivi public du poids et des mensurations pendant le Tour de France des 1500 McDo — Posty78">
+<title>Poids & Mensurations - Posty78</title>
+<meta name="description" content="Suivi public du poids et des mensurations pendant le Tour de France des 1500 McDo - Posty78">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -237,8 +237,8 @@
   <h1>POIDS & MENSURATIONS</h1>
   <div class="hero-stats">
     <div class="stat-pill">⚖️ <b id="statCount">0</b> pesées enregistrées</div>
-    <div class="stat-pill">🎯 Poids actuel : <b id="statCurrent">—</b></div>
-    <div class="stat-pill" id="statEvolPill">📊 Évolution totale : <b id="statEvol">—</b></div>
+    <div class="stat-pill">🎯 Poids actuel : <b id="statCurrent">-</b></div>
+    <div class="stat-pill" id="statEvolPill">📊 Évolution totale : <b id="statEvol">-</b></div>
   </div>
 </header>
 
@@ -287,7 +287,7 @@
       <a href="https://basic.posty78.fr" target="_blank" rel="noopener">🏋️ Basic Fit</a>
       <a href="mailto:contact@posty78.fr">✉️ Contact</a>
     </div>
-    <div class="footer-copy">muscu.posty78.fr — Posty78</div>
+    <div class="footer-copy">muscu.posty78.fr - Posty78</div>
   </footer>
 </div>
 
@@ -295,7 +295,7 @@
 <div class="modal-overlay" id="weightModal">
   <div class="modal">
     <h3 id="weightModalTitle">Nouvelle pesée</h3>
-    <div class="modal-sub" id="weightModalSub">—</div>
+    <div class="modal-sub" id="weightModalSub">-</div>
     <div class="field-row">
       <div class="field">
         <label>Date</label>
@@ -487,8 +487,8 @@ function listenMeasures(){
 function renderHeroStats(){
   $("statCount").textContent = weights.length;
   if (!weights.length){
-    $("statCurrent").textContent = "—";
-    $("statEvol").textContent = "—";
+    $("statCurrent").textContent = "-";
+    $("statEvol").textContent = "-";
     return;
   }
   const sortedAsc = [...weights].sort((a,b)=> a.date.localeCompare(b.date) || (a.createdAtMs||0)-(b.createdAtMs||0));
