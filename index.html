@@ -33,8 +33,7 @@
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(83,252,24,0.08), transparent 60%),
-      radial-gradient(ellipse 700px 400px at 100% 0%, rgba(228,87,46,0.08), transparent 55%),
+      radial-gradient(ellipse 1100px 600px at 50% -10%, rgba(83,252,24,0.045), transparent 65%),
       var(--bg);
     color:var(--text);
     font-family:var(--body);
@@ -66,7 +65,7 @@
     text-decoration:none;
     user-select:none;
   }
-  .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--kick);box-shadow:0 0 8px var(--kick);}
+  .nav-brand .dot{width:8px;height:8px;border-radius:50%;background:var(--kick);box-shadow:0 0 4px rgba(83,252,24,0.6);}
   .nav-pages{display:flex;gap:4px;overflow-x:auto;}
   .nav-pages a{
     font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;
@@ -129,7 +128,7 @@
     transition:transform .12s ease, box-shadow .12s ease;
     box-shadow:0 0 0 rgba(83,252,24,0);
   }
-  .btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(83,252,24,0.25);}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(83,252,24,0.14);}
   .btn:active{transform:translateY(0);}
   .btn.secondary{background:var(--bg-card);color:var(--text);border:1px solid var(--border);}
   .btn.secondary:hover{box-shadow:0 6px 16px rgba(0,0,0,0.3);}
@@ -174,11 +173,11 @@
   .cal-day.has-session{
     background:var(--kick);color:#08130a;font-weight:800;cursor:pointer;border:1px solid var(--kick);
   }
-  .cal-day.has-session:hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(83,252,24,0.35);z-index:2;}
+  .cal-day.has-session:hover{transform:scale(1.05);box-shadow:0 2px 8px rgba(83,252,24,0.2);z-index:2;}
   .cal-day.has-rest{
     background:rgba(242,183,5,0.16);border:1px solid rgba(242,183,5,0.4);color:var(--macdo-gold);font-weight:700;cursor:pointer;
   }
-  .cal-day.has-rest:hover{transform:scale(1.12);box-shadow:0 4px 14px rgba(242,183,5,0.25);z-index:2;}
+  .cal-day.has-rest:hover{transform:scale(1.05);box-shadow:0 2px 8px rgba(242,183,5,0.18);z-index:2;}
   .cal-day.selected{outline:2px solid #fff;outline-offset:1px;}
   .cal-legend{display:flex;justify-content:center;gap:16px;margin-top:12px;font-size:10px;color:var(--text-faint);}
   .cal-legend span{display:flex;align-items:center;gap:5px;}
