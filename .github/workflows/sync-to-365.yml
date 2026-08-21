@@ -20,26 +20,29 @@ jobs:
           token: ${{ secrets.HUB_SYNC_TOKEN }}
           path: hub
 
-      - name: Copie vers hub/muscu/
+      - name: Copie vers hub/seance/, hub/poids/, hub/alimentation/
         run: |
           # Toutes les pages .html de ce repo sont des redirections figees vers 365.posty78.fr
-          # (le vrai contenu vit desormais uniquement dans 365-posty78) : on ne synchronise que
-          # les assets reels (favicon, etc.), jamais les .html, pour ne pas ecraser le contenu réel.
-          rsync -a --delete \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='*.html' \
-            --exclude='CNAME' \
-            --exclude='.nojekyll' \
-            --exclude='README.md' \
-            source/ hub/muscu/
+          # (le vrai contenu vit desormais dans 365-posty78, sous 3 onglets distincts issus de
+          # cet ancien repo "muscu") : on ne synchronise que les assets reels (favicon, etc.),
+          # jamais les .html, pour ne pas ecraser le contenu réel. Meme source, 3 destinations.
+          for dest in seance poids alimentation; do
+            rsync -a --delete \
+              --exclude='.git' \
+              --exclude='.github' \
+              --exclude='*.html' \
+              --exclude='CNAME' \
+              --exclude='.nojekyll' \
+              --exclude='README.md' \
+              source/ "hub/$dest/"
+          done
 
       - name: Commit et push si changement
         run: |
           cd hub
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add muscu/
+          git add seance/ poids/ alimentation/
           if git diff --cached --quiet; then
             echo "Rien a synchroniser."
             exit 0
